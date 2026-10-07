@@ -13,7 +13,7 @@ export function Login() {
     e.preventDefault(); setErr(null); setOk(null); setCargando(true)
     try {
       if (modo === 'crear') {
-        const { data, error } = await supabase.auth.signUp({ email: email.trim(), password: pass, options: { emailRedirectTo: window.location.origin + '/app/' } })
+        const { data, error } = await supabase.auth.signUp({ email: email.trim(), password: pass, options: { emailRedirectTo: window.location.origin + import.meta.env.BASE_URL } })
         if (error) throw error
         if (!data.session) setOk('Te enviamos un correo para confirmar tu cuenta. Ábrelo y vuelve aquí.')
       } else {
@@ -26,7 +26,7 @@ export function Login() {
   async function recuperar() {
     if (!email.trim()) { setErr('Escribe tu correo y vuelve a pulsar "Olvidé mi contraseña"'); return }
     setErr(null)
-    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin + '/app/#/clave' })
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin + import.meta.env.BASE_URL + '#/clave' })
     if (error) setErr(mensajeError(error)); else setOk('Te enviamos un correo para cambiar la contraseña.')
   }
 
@@ -51,7 +51,7 @@ export function Login() {
           {modo === 'entrar' && <button type="button" className="ghost block" style={{ marginTop: '.5rem' }} onClick={recuperar}>Olvidé mi contraseña</button>}
         </div>
         <p className="small muted" style={{ textAlign: 'center', marginTop: '1rem' }}>¿Te invitaron a una organización? Crea tu cuenta y luego ingresa el código.</p>
-        <p className="small muted" style={{ textAlign: 'center' }}><a href="/">Volver al sitio</a></p>
+        <p className="small muted" style={{ textAlign: 'center' }}><a href="../">Volver al sitio</a></p>
       </div>
     </div>
   )

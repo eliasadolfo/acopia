@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { useStore } from '../store'
 import * as db from '../lib/db'
 import type { Incidencia, Miembro } from '../lib/supabase'
-import { CHECKOUT, WHATSAPP, mensajeError, planVigente, PLANES } from '../lib/supabase'
+import { CHECKOUT, WHATSAPP, mensajeError, planVigente, PLANES, supabase } from '../lib/supabase'
 import { Toast, Vacio, fechaHora, fecha } from '../components/Layout'
 
 function useToast() {
@@ -14,11 +14,14 @@ function useToast() {
 export function Mas() {
   const { org, rol, session, salir } = useStore()
   const plan = org ? planVigente(org) : 'gratis'
+  const [superadmin, setSuperadmin] = useState(false)
+  useEffect(() => { supabase.rpc('ac_soy_superadmin').then(r => setSuperadmin(r.data === true)) }, [])
   const items = [
     ['/incidencias', '⚠️', 'Incidencias', 'Cajas inexistentes o duplicadas al paletizar'],
     ['/equipo', '👥', 'Equipo', 'Invitar voluntarios con un código'],
     ['/bodegas', '🏭', 'Bodegas', 'Centros de acopio y prefijos'],
     ['/plan', '⭐', `Plan: ${PLANES[plan].nombre}`, plan === 'gratis' ? 'Activa Campaña o Pro' : 'Ver estado del plan'],
+    ...(superadmin ? [['/admin', '🛠', 'Administración de Acopia', 'Organizaciones, leads y activación de planes']] : []),
   ]
   return (
     <div className="stack">
@@ -66,7 +69,7 @@ export function Equipo() {
   const cargar = useCallback(async () => { if (org) setLista(await db.miembros(org.id)) }, [org])
   useEffect(() => { void cargar() }, [cargar])
   async function invitar() { if (!org) return; try { setCodigo(await db.crearInvitacion(org.id, rolInv)) } catch (e) { mostrar(mensajeError(e), 'err') } }
-  const link = `${window.location.origin}/app/#/`
+  const link = `${window.location.origin}${import.meta.env.BASE_URL}#/`
   const texto = codigo ? `Únete al centro de acopio "${org?.nombre}" en Acopia:\n1) Entra a ${link}\n2) Crea tu cuenta con tu correo\n3) Elige "Tengo un código" y escribe: ${codigo}` : ''
   return (
     <div className="stack">
@@ -137,7 +140,7 @@ export function Plan() {
   const { org, session } = useStore()
   if (!org) return null
   const plan = planVigente(org)
-  const q = `?org=${org.id}&email=${encodeURIComponent(session?.user.email ?? '')}`
+  const q = `?checkout[email]=${encodeURIComponent(session?.user.email ?? '')}&checkout[custom][org]=${org.id}`
   const planes = [
     { k: 'gratis', n: 'Gratis', p: 'US$0', d: 'Para empezar hoy', f: ['1 bodega', '150 cajas', '1 envío', 'Voluntarios ilimitados', 'Listas de empaque y QR'] },
     { k: 'campana', n: 'Campaña', p: 'US$97', s: 'por 90 días', d: 'Para una emergencia o colecta', f: ['Bodegas ilimitadas', 'Cajas y pallets ilimitados', 'Envíos ilimitados', 'Packing list para aduana con HS', 'Soporte por WhatsApp'], url: CHECKOUT.campana },

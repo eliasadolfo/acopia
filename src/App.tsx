@@ -8,6 +8,7 @@ import { Cajas, CajaDetalle } from './pages/Cajas'
 import { Pallets, PalletDetalle } from './pages/Pallets'
 import { Envios, EnvioDetalle } from './pages/Envios'
 import { Mas, Incidencias, Equipo, Bodegas, Plan } from './pages/Mas'
+import { Admin } from './pages/Admin'
 
 export default function App() {
   const { cargando, session, org } = useStore()
@@ -29,6 +30,7 @@ export default function App() {
     case 'bodegas': pagina = <Bodegas />; break
     case 'plan': pagina = <Plan />; break
     case 'mas': pagina = <Mas />; break
+    case 'admin': pagina = <Admin />; break
     default: pagina = <Panel />
   }
   return <Layout>{pagina}</Layout>
