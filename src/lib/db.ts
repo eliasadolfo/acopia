@@ -75,6 +75,7 @@ export const envios = (org: string) => ok<Envio[]>(supabase.from('ac_envios').se
 export const envio = (id: string) => ok<Envio>(supabase.from('ac_envios').select('*').eq('id', id).single())
 export const crearEnvio = (e: { org_id: string; codigo: string; nombre: string; destino: string; fecha: string }) => ok<Envio>(supabase.from('ac_envios').insert(e).select().single())
 export const actualizarEnvio = (id: string, p: Partial<Envio>) => ok(supabase.from('ac_envios').update(p).eq('id', id))
+export const envioResumen = (id: string) => ok<{ pallets: number; cajas: number; items: number; lineas: number; peso: number }>(supabase.rpc('ac_envio_resumen', { p_envio: id }))
 export const packingEnvio = (id: string) => ok<{ pallet: string; caja: string; peso_caja: number | null; cantidad: number; descripcion: string; canonica: string | null; marca: string | null; unidad: string | null; categoria: string | null; hs_code: string | null; valor_unitario: number | null }[]>(supabase.rpc('ac_packing_envio', { p_envio: id }))
 
 // ---------- Incidencias ----------

@@ -7,13 +7,13 @@ import { fmt, fechaHora } from '../components/Layout'
 import { ir } from '../lib/router'
 
 export function Panel() {
-  const { org, centroActual, miNombre } = useStore()
+  const { org, centroActual, miNombre, oferta } = useStore()
   const [p, setP] = useState<P | null>(null)
   const [err, setErr] = useState<string | null>(null)
   useEffect(() => { if (org) db.panel(org.id).then(setP).catch(e => setErr(e.message)) }, [org])
   if (!org) return null
   const plan = planVigente(org)
-  const lim = PLANES[plan].limiteCajas
+  const lim = plan === 'gratis' ? oferta.gratis_max_cajas : PLANES[plan].limiteCajas
   const maxCat = Math.max(1, ...(p?.por_categoria.map(c => Number(c.items)) ?? [1]))
   return (
     <div className="stack">

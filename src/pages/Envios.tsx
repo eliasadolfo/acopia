@@ -3,6 +3,7 @@ import { useStore } from '../store'
 import * as db from '../lib/db'
 import type { Envio, Pallet } from '../lib/supabase'
 import { mensajeError, planVigente } from '../lib/supabase'
+import { ir } from '../lib/router'
 import { Toast, Vacio, fmt, fecha } from '../components/Layout'
 import { descargarCSV } from '../lib/print'
 
@@ -13,7 +14,7 @@ function useToast() {
 }
 
 export function Envios() {
-  const { org, rol } = useStore()
+  const { org, rol, oferta } = useStore()
   const [lista, setLista] = useState<Envio[]>([])
   const [nuevo, setNuevo] = useState(false)
   const [f, setF] = useState({ nombre: '', destino: '', fecha: new Date().toISOString().slice(0, 10) })
@@ -23,7 +24,7 @@ export function Envios() {
 
   async function crear(e: FormEvent) {
     e.preventDefault(); if (!org) return
-    if (planVigente(org) === 'gratis' && lista.length >= 1) { mostrar('El plan gratis incluye 1 envío. Activa Campaña para más.', 'err'); return }
+    if (planVigente(org) === 'gratis' && oferta.gratis_max_envios != null && lista.length >= oferta.gratis_max_envios) { mostrar(`El plan gratis incluye ${oferta.gratis_max_envios} envío. Activa Campaña para más.`, 'err'); return }
     const n = lista.length + 1
     try { await db.crearEnvio({ org_id: org.id, codigo: `ENV-${String(n).padStart(3, '0')}`, nombre: f.nombre, destino: f.destino, fecha: f.fecha }); setNuevo(false); setF({ nombre: '', destino: '', fecha: new Date().toISOString().slice(0, 10) }); await cargar() } catch (e) { mostrar(mensajeError(e), 'err') }
   }
@@ -56,7 +57,7 @@ export function Envios() {
 }
 
 export function EnvioDetalle({ id }: { id: string }) {
-  const { org, rol } = useStore()
+  const { org, rol, oferta } = useStore()
   const [e, setE] = useState<Envio | null>(null)
   const [asignados, setAsignados] = useState<Pallet[]>([])
   const [libres, setLibres] = useState<Pallet[]>([])
@@ -70,17 +71,17 @@ export function EnvioDetalle({ id }: { id: string }) {
       const x = await db.envio(id); setE(x)
       const [a, l] = await Promise.all([db.pallets(org.id, { envio: id }), db.pallets(org.id, { estado: 'cerrado', envio: null })])
       setAsignados(a); setLibres(l)
-      const pk = await db.packingEnvio(id)
-      const cajas = new Set(pk.map(r => r.caja)).size
-      const pesoCajas = Array.from(new Map(pk.map(r => [r.caja, Number(r.peso_caja ?? 0)])).values()).reduce((s, v) => s + v, 0)
-      setResumen({ cajas, items: pk.reduce((s, r) => s + Number(r.cantidad), 0), lineas: pk.length, peso: pesoCajas + a.reduce((s, p) => s + Number(p.tara_kg ?? 0), 0) })
+      const r = await db.envioResumen(id)
+      setResumen({ cajas: Number(r.cajas), items: Number(r.items), lineas: Number(r.lineas), peso: Number(r.peso) })
     } catch (er) { setErr(mensajeError(er)) }
   }, [id, org])
   useEffect(() => { void cargar() }, [cargar])
 
   async function asignar(p: Pallet) { try { await db.actualizarPallet(p.id, { envio_id: id }); await cargar() } catch (er) { mostrar(mensajeError(er), 'err') } }
   async function quitar(p: Pallet) { try { await db.actualizarPallet(p.id, { envio_id: null }); await cargar() } catch (er) { mostrar(mensajeError(er), 'err') } }
-  async function estado(nuevo: 'abierto' | 'cerrado') { try { await db.actualizarEnvio(id, { estado: nuevo }); await cargar() } catch (er) { mostrar(mensajeError(er), 'err') } }
+  const bloqueado = !!org && planVigente(org) === 'gratis' && !oferta.gratis_puede_despachar
+  async function estado(nuevo: 'abierto' | 'cerrado') { if (nuevo === 'cerrado' && bloqueado) { ir('/plan'); return } try { await db.actualizarEnvio(id, { estado: nuevo }); await cargar() } catch (er) { mostrar(mensajeError(er), 'err') } }
+  async function conPlan(f: () => Promise<void>) { if (bloqueado) { ir('/plan'); return } try { await f() } catch (er) { mostrar(mensajeError(er), 'err') } }
 
   async function exportarPacking() {
     const pk = await db.packingEnvio(id)
@@ -119,10 +120,11 @@ export function EnvioDetalle({ id }: { id: string }) {
       <div className="card">
         <h2>Documentos</h2>
         <div className="row">
-          <button className="sec sm" onClick={exportarPacking}>⬇ Packing list detallado (CSV)</button>
-          <button className="sec sm" onClick={exportarResumen}>⬇ Resumen por producto + HS</button>
-          <button className="sec sm" onClick={exportarPallets}>⬇ Lista de pallets</button>
+          <button className="sec sm" onClick={() => conPlan(exportarPacking)}>⬇ Packing list detallado (CSV)</button>
+          <button className="sec sm" onClick={() => conPlan(exportarResumen)}>⬇ Resumen por producto + HS</button>
+          <button className="sec sm" onClick={() => conPlan(exportarPallets)}>⬇ Lista de pallets</button>
         </div>
+        {bloqueado && <div className="aviso">Registrar y paletizar es gratis sin límite. Para <b>cerrar el envío y descargar los documentos</b> activa Campaña (US$97 por 90 días) o Pro. <a href="#/plan">Ver planes</a></div>}
         <p className="small muted" style={{ marginTop: '.5rem' }}>Los CSV abren en Excel o Google Sheets. El HS code sale del catálogo (por palabra clave o categoría); revísalo con tu agente de aduana.</p>
       </div>
       <div className="card">

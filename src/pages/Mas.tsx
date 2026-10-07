@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { useStore } from '../store'
 import * as db from '../lib/db'
 import type { Incidencia, Miembro } from '../lib/supabase'
-import { CHECKOUT, WHATSAPP, mensajeError, planVigente, PLANES, supabase } from '../lib/supabase'
+import { CHECKOUT, SOPORTE_EMAIL, mensajeError, planVigente, PLANES, supabase } from '../lib/supabase'
 import { Toast, Vacio, fechaHora, fecha } from '../components/Layout'
 
 function useToast() {
@@ -31,7 +31,7 @@ export function Mas() {
         <div className="muted small">Sesión: {session?.user.email} · rol {rol}</div>
         <div className="row" style={{ marginTop: '.5rem' }}>
           <button className="sec sm" onClick={salir}>Cerrar sesión</button>
-          {WHATSAPP && <a className="btn sec sm" href={`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hola, uso Acopia (${org?.nombre}) y necesito ayuda con…`)}`} target="_blank" rel="noreferrer">Soporte por WhatsApp</a>}
+          <a className="btn sec sm" href={`mailto:${SOPORTE_EMAIL}?subject=${encodeURIComponent(`Acopia · ${org?.nombre ?? ''}`)}`}>Soporte por correo</a>
         </div>
       </div>
     </div>
@@ -137,14 +137,15 @@ export function Bodegas() {
 }
 
 export function Plan() {
-  const { org, session } = useStore()
+  const { org, session, oferta } = useStore()
   if (!org) return null
   const plan = planVigente(org)
+  const sinTope = oferta.oferta === 'despacho'
   const q = `?checkout[email]=${encodeURIComponent(session?.user.email ?? '')}&checkout[custom][org]=${org.id}`
   const planes = [
-    { k: 'gratis', n: 'Gratis', p: 'US$0', d: 'Para empezar hoy', f: ['1 bodega', '150 cajas', '1 envío', 'Voluntarios ilimitados', 'Listas de empaque y QR'] },
-    { k: 'campana', n: 'Campaña', p: 'US$97', s: 'por 90 días', d: 'Para una emergencia o colecta', f: ['Bodegas ilimitadas', 'Cajas y pallets ilimitados', 'Envíos ilimitados', 'Packing list para aduana con HS', 'Soporte por WhatsApp'], url: CHECKOUT.campana },
-    { k: 'pro', n: 'Pro', p: 'US$297', s: 'por año', d: 'Para organizaciones que acopian todo el año', f: ['Todo lo de Campaña', 'Varias campañas al año', 'Diccionario propio compartido', 'Prioridad en nuevas funciones'], url: CHECKOUT.pro },
+    { k: 'gratis', n: 'Gratis', p: 'US$0', d: sinTope ? 'Registra, paletiza e invita voluntarios sin límite' : 'Para empezar hoy', f: sinTope ? ['Bodegas, cajas y pallets sin límite', 'Voluntarios ilimitados', 'Listas de empaque y etiquetas QR', 'Incidencias y panel', 'Envíos: se cierran con un plan pagado'] : ['1 bodega', '150 cajas', '1 envío', 'Voluntarios ilimitados', 'Listas de empaque y QR'] },
+    { k: 'campana', n: 'Campaña', p: 'US$97', s: 'por 90 días', d: sinTope ? 'Pagas solo cuando despachas' : 'Para una emergencia o colecta', f: ['Cierra todos los envíos que necesites en 90 días', 'Packing list para aduana con código HS', 'Resumen por producto y lista de pallets', 'Garantía de 30 días: si no te sirvió, devolvemos el dinero'], url: CHECKOUT.campana },
+    { k: 'pro', n: 'Pro', p: 'US$297', s: 'por año', d: 'Para organizaciones que acopian todo el año', f: ['Todo lo de Campaña durante 365 días', 'Varias campañas al año', 'Diccionario propio compartido', 'Prioridad en nuevas funciones'], url: CHECKOUT.pro },
   ]
   return (
     <div className="stack">
@@ -157,10 +158,10 @@ export function Plan() {
           <div className="row between"><h2>{p.n}</h2><div><b style={{ fontSize: '1.3rem' }}>{p.p}</b> <span className="muted small">{p.s ?? ''}</span></div></div>
           <p className="muted small">{p.d}</p>
           <ul style={{ margin: '0 0 .75rem 1.1rem', padding: 0 }}>{p.f.map(x => <li key={x}>{x}</li>)}</ul>
-          {p.k !== 'gratis' && (p.url ? <a className="btn block accent" href={p.url + q} target="_blank" rel="noreferrer">Activar {p.n}</a> : <a className="btn block sec" href={`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Quiero activar el plan ${p.n} de Acopia para ${org.nombre} (id ${org.id})`)}`} target="_blank" rel="noreferrer">Activar {p.n} por WhatsApp</a>)}
+          {p.k !== 'gratis' && (p.url ? <a className="btn block accent" href={p.url + q} target="_blank" rel="noreferrer">Activar {p.n} · pago en línea</a> : <button className="block sec" disabled>Pago en línea disponible muy pronto</button>)}
         </div>
       ))}
-      <p className="small muted">Tras pagar, el plan se activa automáticamente en minutos con el mismo correo de tu cuenta ({session?.user.email}). Si no, escríbenos por WhatsApp.</p>
+      <p className="small muted">El pago es en línea con tarjeta y el plan se activa solo, en segundos, con el mismo correo de tu cuenta ({session?.user.email}). Sin llamadas ni formularios. Soporte: {SOPORTE_EMAIL}.</p>
     </div>
   )
 }

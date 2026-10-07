@@ -1,7 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
-import type { Centro, Miembro, Org, Rol } from './lib/supabase'
+import type { Centro, Miembro, Org, Rol, Oferta } from './lib/supabase'
+import { OFERTA_DEFECTO } from './lib/supabase'
 import * as db from './lib/db'
 
 interface Estado {
@@ -13,6 +14,7 @@ interface Estado {
   miNombre: string
   centros: Centro[]
   centroActual: Centro | null
+  oferta: Oferta
   elegirOrg: (id: string) => void
   elegirCentro: (id: string) => void
   recargar: () => Promise<void>
@@ -30,6 +32,8 @@ export function Store({ children }: { children: ReactNode }) {
   const [orgId, setOrgId] = useState<string | null>(() => localStorage.getItem(LS_ORG))
   const [centros, setCentros] = useState<Centro[]>([])
   const [centroId, setCentroId] = useState<string | null>(() => localStorage.getItem(LS_CENTRO))
+  const [oferta, setOferta] = useState<Oferta>(OFERTA_DEFECTO)
+  useEffect(() => { supabase.rpc('ac_oferta').then(r => { if (r.data) setOferta(r.data as Oferta) }) }, [])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => { setSession(data.session); if (!data.session) setCargando(false) })
@@ -63,13 +67,13 @@ export function Store({ children }: { children: ReactNode }) {
     return {
       cargando, session, orgs,
       org: m?.ac_orgs ?? null, rol: m?.rol ?? null, miNombre: m?.nombre ?? session?.user.email ?? '',
-      centros, centroActual: centros.find(c => c.id === centroId) ?? null,
+      centros, centroActual: centros.find(c => c.id === centroId) ?? null, oferta,
       elegirOrg: (id) => { localStorage.setItem(LS_ORG, id); localStorage.removeItem(LS_CENTRO); setCentroId(null); setOrgId(id) },
       elegirCentro: (id) => { localStorage.setItem(LS_CENTRO, id); setCentroId(id) },
       recargar,
       salir: async () => { await supabase.auth.signOut(); localStorage.removeItem(LS_ORG); localStorage.removeItem(LS_CENTRO); setOrgId(null); setCentroId(null) },
     }
-  }, [cargando, session, orgs, orgId, centros, centroId, recargar])
+  }, [cargando, session, orgs, orgId, centros, centroId, recargar, oferta])
 
   return <Ctx.Provider value={valor}>{children}</Ctx.Provider>
 }

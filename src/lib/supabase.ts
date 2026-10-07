@@ -14,6 +14,11 @@ export const CHECKOUT = {
   pro: import.meta.env.VITE_CHECKOUT_PRO as string | undefined,
 }
 export const WHATSAPP = (import.meta.env.VITE_WHATSAPP as string | undefined) ?? ''
+export const SOPORTE_EMAIL = (import.meta.env.VITE_SOPORTE_EMAIL as string | undefined) ?? 'elias@tuescuelademarcas.cl'
+
+// Modelo de oferta (se lee de ac_config vía ac_oferta): 'despacho' = gratis sin tope, se paga al cerrar un envío; 'tope' = gratis hasta 150 cajas
+export interface Oferta { oferta: 'despacho' | 'tope'; gratis_max_cajas: number | null; gratis_max_centros: number | null; gratis_max_envios: number | null; gratis_puede_despachar: boolean }
+export const OFERTA_DEFECTO: Oferta = { oferta: 'despacho', gratis_max_cajas: null, gratis_max_centros: null, gratis_max_envios: null, gratis_puede_despachar: false }
 
 // ---------- Tipos ----------
 export type Plan = 'gratis' | 'campana' | 'pro'
@@ -40,7 +45,7 @@ export interface Panel {
 }
 
 export const PLANES: Record<Plan, { nombre: string; limiteCajas: number | null; limiteCentros: number | null }> = {
-  gratis: { nombre: 'Gratis', limiteCajas: 150, limiteCentros: 1 },
+  gratis: { nombre: 'Gratis', limiteCajas: null, limiteCentros: null },
   campana: { nombre: 'Campaña', limiteCajas: null, limiteCentros: null },
   pro: { nombre: 'Pro', limiteCajas: null, limiteCentros: null },
 }
