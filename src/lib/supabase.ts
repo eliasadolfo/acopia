@@ -10,9 +10,11 @@ export const supabase = createClient(url ?? 'https://sin-configurar.supabase.co'
 })
 
 export const CHECKOUT = {
-  campana: import.meta.env.VITE_CHECKOUT_CAMPANA as string | undefined,
-  pro: import.meta.env.VITE_CHECKOUT_PRO as string | undefined,
+  emprendedor: import.meta.env.VITE_CHECKOUT_EMPRENDEDOR as string | undefined,
+  bodega: import.meta.env.VITE_CHECKOUT_BODEGA as string | undefined,
+  temporada: import.meta.env.VITE_CHECKOUT_TEMPORADA as string | undefined,
 }
+export const LIA_URL = (import.meta.env.VITE_LIA_URL as string | undefined) ?? 'https://devn8n.tuescuelademarcas.cl/webhook/acopiar-lia-app'
 export const WHATSAPP = (import.meta.env.VITE_WHATSAPP as string | undefined) ?? ''
 export const SOPORTE_EMAIL = (import.meta.env.VITE_SOPORTE_EMAIL as string | undefined) ?? 'elias@tuescuelademarcas.cl'
 
@@ -21,7 +23,7 @@ export interface Oferta { oferta: 'despacho' | 'tope'; gratis_max_cajas: number 
 export const OFERTA_DEFECTO: Oferta = { oferta: 'despacho', gratis_max_cajas: null, gratis_max_centros: null, gratis_max_envios: null, gratis_puede_despachar: false }
 
 // ---------- Tipos ----------
-export type Plan = 'gratis' | 'campana' | 'pro'
+export type Plan = 'gratis' | 'emprendedor' | 'bodega' | 'temporada' | 'comunidad'
 export type Rol = 'admin' | 'operador'
 
 export interface Org { id: string; nombre: string; pais: string | null; tipo: string | null; plan: Plan; plan_vence: string | null; created_at: string }
@@ -46,8 +48,10 @@ export interface Panel {
 
 export const PLANES: Record<Plan, { nombre: string; limiteCajas: number | null; limiteCentros: number | null }> = {
   gratis: { nombre: 'Gratis', limiteCajas: null, limiteCentros: null },
-  campana: { nombre: 'Campaña', limiteCajas: null, limiteCentros: null },
-  pro: { nombre: 'Pro', limiteCajas: null, limiteCentros: null },
+  emprendedor: { nombre: 'Emprendedor', limiteCajas: null, limiteCentros: 1 },
+  bodega: { nombre: 'Bodega', limiteCajas: null, limiteCentros: null },
+  temporada: { nombre: 'Temporada', limiteCajas: null, limiteCentros: null },
+  comunidad: { nombre: 'Comunidad', limiteCajas: null, limiteCentros: null },
 }
 
 export function planVigente(org: Org): Plan {
@@ -58,6 +62,7 @@ export function planVigente(org: Org): Plan {
 export function mensajeError(e: unknown): string {
   const m = (e as { message?: string })?.message ?? String(e)
   if (m.startsWith('PLAN_LIMITE:')) return m.replace('PLAN_LIMITE:', '').trim()
+  if (/ac_envio_guard|PLAN_LIMITE/.test(m)) return 'Para cerrar despachos y descargar documentos activa un plan.'
   if (/Invalid login credentials/i.test(m)) return 'Correo o contraseña incorrectos'
   if (/already registered|already been registered/i.test(m)) return 'Ese correo ya tiene cuenta. Inicia sesión.'
   if (/Password should be at least/i.test(m)) return 'La contraseña debe tener al menos 6 caracteres'

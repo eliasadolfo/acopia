@@ -33,8 +33,8 @@ export function Login() {
   return (
     <div className="centrado">
       <div className="auth">
-        <div className="logo">Acopia</div>
-        <p className="muted" style={{ textAlign: 'center' }}>Cajas, pallets y envíos de tu centro de acopio, bajo control.</p>
+        <div className="logo">Acopiar</div>
+        <p className="muted" style={{ textAlign: 'center' }}>Tu bodega bajo control: cajas con QR, pallets validados, despachos con packing list.</p>
         {!configurado && <div className="error">Falta configurar la conexión (variables VITE_SUPABASE_*).</div>}
         <div className="card">
           <div className="tabs">
@@ -50,7 +50,7 @@ export function Login() {
           </form>
           {modo === 'entrar' && <button type="button" className="ghost block" style={{ marginTop: '.5rem' }} onClick={recuperar}>Olvidé mi contraseña</button>}
         </div>
-        <p className="small muted" style={{ textAlign: 'center', marginTop: '1rem' }}>¿Te invitaron a una organización? Crea tu cuenta y luego ingresa el código.</p>
+        <p className="small muted" style={{ textAlign: 'center', marginTop: '1rem' }}>¿Te invitaron a una bodega? Crea tu cuenta y luego ingresa el código.</p>
         <p className="small muted" style={{ textAlign: 'center' }}><a href="../">Volver al sitio</a></p>
       </div>
     </div>

@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Acopia — control de cajas, pallets y envíos para centros de acopio</title>
-<meta name="description" content="Registra cajas desde el celular, arma pallets escaneando QR y descarga el packing list para aduana. Probado en una operación real de 2.143 cajas y 29 toneladas. Gratis para empezar.">
-<meta property="og:title" content="Acopia — tu centro de acopio bajo control">
-<meta property="og:description" content="Cajas con código automático, pallets validados y packing list para aduana. Gratis para empezar.">
+<title>Acopiar — control de bodega por cajas, pallets y despachos</title>
+<meta name="description" content="Para pymes que mueven productos: ecommerce, distribuidores, importadores y centros de acopio. Cada caja con QR, cada pallet validado, cada despacho con su packing list. Gratis para empezar, desde US$19 al mes.">
+<meta property="og:title" content="Acopiar — tu bodega bajo control, desde el celular">
+<meta property="og:description" content="Cajas con QR, pallets validados y packing list listo para el transportista o aduana. Gratis para empezar.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_LA">
 <link rel="icon" href="app/icono.svg" type="image/svg+xml">
-<link rel="canonical" href="https://acopia.app/">
+<link rel="canonical" href="https://acopiar.app/">
 <meta name="theme-color" content="#0f766e">
 <!-- META_PIXEL: se inserta el código del píxel de Meta aquí antes de lanzar campañas -->
 <style>
@@ -40,141 +40,183 @@ nav .cta{margin-left:auto}@media(min-width:760px){nav .cta{margin-left:0}}
 .mock .row{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px}.mock .row .cod{font-family:ui-monospace,Menlo,monospace;font-weight:800}.mock .row .st{margin-left:auto;font-size:.7rem;font-weight:800;color:var(--ok);background:#dff3e6;padding:.15rem .5rem;border-radius:999px;text-transform:uppercase}
 .mock .qr{width:44px;height:44px;border-radius:8px;background:repeating-conic-gradient(var(--ink) 0 25%,transparent 0 50%) 0 0/10px 10px}
 .proof{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:28px 0}
-.proof .wrap{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;text-align:center}@media(min-width:760px){.proof .wrap{grid-template-columns:repeat(5,1fr)}}
+.proof .wrap{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;text-align:center}@media(min-width:760px){.proof .wrap{grid-template-columns:repeat(4,1fr)}}
 .proof b{display:block;font-size:1.9rem;font-weight:900;letter-spacing:-.03em;color:var(--brand-ink)}.proof span{font-size:.85rem;color:var(--muted)}
-.grid{display:grid;gap:16px}@media(min-width:700px){.grid.c2{grid-template-columns:1fr 1fr}.grid.c3{grid-template-columns:repeat(3,1fr)}}
+.grid{display:grid;gap:16px}@media(min-width:700px){.grid.c2{grid-template-columns:1fr 1fr}.grid.c3{grid-template-columns:repeat(3,1fr)}.grid.c4{grid-template-columns:repeat(4,1fr)}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
 .card .ico{font-size:1.8rem;margin-bottom:.5rem}
 .pain{border-left:4px solid var(--accent);padding-left:14px}
-.steps{counter-reset:p}.step{display:grid;grid-template-columns:48px 1fr;gap:16px;margin-bottom:28px}.step .n{width:48px;height:48px;border-radius:14px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:900;font-size:1.3rem}
+.step{display:grid;grid-template-columns:48px 1fr;gap:16px;margin-bottom:28px}.step .n{width:48px;height:48px;border-radius:14px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:900;font-size:1.3rem}
 .quote{background:var(--brand-soft);border-radius:var(--radius);padding:28px;font-size:1.15rem}.quote footer{font-size:.9rem;color:var(--muted);margin-top:.75rem}
-.price{display:flex;flex-direction:column}.price .p{font-size:2.2rem;font-weight:900;letter-spacing:-.03em}.price .p small{font-size:.9rem;font-weight:600;color:var(--muted)}
+.price{display:flex;flex-direction:column}.price .p{font-size:2rem;font-weight:900;letter-spacing:-.03em}.price .p small{font-size:.9rem;font-weight:600;color:var(--muted)}
 .price ul{padding-left:1.1rem;margin:.75rem 0 1.25rem;flex:1}.price li{margin:.3rem 0}.price.best{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft),var(--shadow)}
 .tag{position:absolute;top:-12px;left:24px;background:var(--accent);color:#1a1200;font-size:.75rem;font-weight:800;padding:.2rem .6rem;border-radius:999px;text-transform:uppercase}.rel{position:relative}
 details{border-bottom:1px solid var(--line);padding:14px 0}summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between}summary::after{content:"+";color:var(--muted)}details[open] summary::after{content:"–"}
-label{display:block;font-size:.85rem;font-weight:700;color:var(--muted);margin:0 0 .3rem}input,select{width:100%;font:inherit;font-size:16px;padding:.75rem .85rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);min-height:48px}
+label{display:block;font-size:.85rem;font-weight:700;color:var(--muted);margin:0 0 .3rem}input,textarea{width:100%;font:inherit;font-size:16px;padding:.75rem .85rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);min-height:48px}
 .f2{display:grid;gap:12px}@media(min-width:600px){.f2{grid-template-columns:1fr 1fr}}.campo{margin-bottom:12px}
 footer.pie{padding:40px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}footer.pie .wrap{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between}
 .ok{background:#dff3e6;color:#1f8a4c;padding:1rem;border-radius:12px;font-weight:700}.err{background:#fde8e8;color:#c62828;padding:.75rem;border-radius:12px}
-.wa{position:fixed;right:16px;bottom:16px;z-index:9;background:#25d366;color:#fff;border-radius:999px;padding:.75rem 1.1rem;font-weight:800;text-decoration:none;box-shadow:var(--shadow)}
+.comunidad{background:var(--surface-2);border:1px dashed var(--brand);border-radius:var(--radius);padding:24px;margin-top:24px}
 </style>
 </head>
 <body>
 <nav><div class="wrap">
-  <a class="logo" href="./">Acopia</a>
-  <div class="links"><a href="#como">Cómo funciona</a><a href="#historia">La historia</a><a href="#precios">Precios</a><a href="app/">Entrar</a></div>
-  <a class="btn cta" href="app/" data-ev="cta_nav">Crear cuenta gratis</a>
+  <a class="logo" href="./">Acopiar</a>
+  <div class="links"><a href="#como">Cómo funciona</a><a href="#usos">Para quién</a><a href="#precios">Precios</a><a href="app/">Entrar</a></div>
+  <a class="btn cta" href="app/" data-ev="cta_nav">Empezar gratis</a>
 </div></nav>
 
 <header class="hero"><div class="wrap">
   <div>
-    <span class="kicker">Para centros de acopio, colectas y bodegas de donaciones</span>
-    <h1>Que ninguna caja se pierda entre la bodega y el destino.</h1>
-    <p class="sub">Acopia le da a tus voluntarios un sistema que entienden en 5 minutos: cada caja con su código y su etiqueta QR, cada pallet validado al armarlo, y el packing list para aduana listo en un clic. <b>Gratis sin límite de cajas: pagas solo cuando despachas.</b></p>
+    <span class="kicker">Control de bodega para pymes que despachan</span>
+    <h1>Cada caja con su QR. Cada pallet validado. Cada despacho con su packing list.</h1>
+    <p class="sub">Acopiar es el control de bodega para negocios que mueven productos físicos: ecommerce, distribuidores, importadores, couriers y centros de acopio. Funciona desde el celular y tu equipo lo aprende en 5 minutos. <b>Gratis para empezar, sin tarjeta.</b></p>
     <div class="ctas">
-      <a class="btn" href="app/" data-ev="cta_hero">Crear cuenta gratis</a>
+      <a class="btn" href="app/" data-ev="cta_hero">Empezar gratis</a>
       <a class="btn sec" href="#como">Ver cómo funciona</a>
     </div>
-    <p class="small muted">Sin tarjeta. Registra y paletiza sin límite. Pagas US$97 solo al cerrar un envío, con garantía de 30 días.</p>
+    <p class="small muted">Sin instalar nada. Registra y paletiza sin límite. Los planes parten en US$19 al mes.</p>
   </div>
   <div class="mock" aria-hidden="true">
-    <div class="bar"><b>Acopia</b><span class="chip">QN · Bodega Quinta Normal</span></div>
-    <div class="k"><div><b>1.554</b><span>Cajas registradas</span></div><div><b>78</b><span>Pallets cerrados</span></div><div><b>29,2 t</b><span>Peso paletizado</span></div><div><b>0</b><span>Incidencias abiertas</span></div></div>
-    <div class="row"><div class="qr"></div><div><div class="cod">QN-1554</div><div class="small muted">Thalia · 12 líneas · 18,5 kg</div></div><span class="st">paletizada</span></div>
-    <div class="row"><div class="qr"></div><div><div class="cod">PAL-QN-079</div><div class="small muted">18 cajas · 352 kg</div></div><span class="st" style="background:#fdf1d6;color:#7a4f00">abierto</span></div>
+    <div class="bar"><b>Acopiar</b><span class="chip">BQ · Bodega central</span></div>
+    <div class="k"><div><b>1.554</b><span>Cajas registradas</span></div><div><b>78</b><span>Pallets cerrados</span></div><div><b>29,2 t</b><span>Peso despachado</span></div><div><b>0</b><span>Incidencias abiertas</span></div></div>
+    <div class="row"><div class="qr"></div><div><div class="cod">BQ-1554</div><div class="small muted">Pedido #4471 · 12 líneas · 18,5 kg</div></div><span class="st">paletizada</span></div>
+    <div class="row"><div class="qr"></div><div><div class="cod">PAL-BQ-079</div><div class="small muted">18 cajas · 352 kg · camión 14:00</div></div><span class="st" style="background:#fdf1d6;color:#7a4f00">abierto</span></div>
   </div>
 </div></header>
 
 <div class="proof"><div class="wrap">
-  <div><b>2.143</b><span>cajas registradas</span></div>
-  <div><b>83</b><span>pallets armados</span></div>
-  <div><b>29 t</b><span>de ayuda despachada</span></div>
-  <div><b>127</b><span>voluntarios</span></div>
-  <div><b>4</b><span>bodegas a la vez</span></div>
+  <div><b>2.143</b><span>cajas en una sola operación</span></div>
+  <div><b>83</b><span>pallets armados y validados</span></div>
+  <div><b>29 t</b><span>despachadas sin perder una caja</span></div>
+  <div><b>127</b><span>personas registrando a la vez</span></div>
 </div></div>
 
 <section id="problema"><div class="wrap">
-  <h2>Lo que pasa con Excel y papel cuando llegan 500 cajas en un fin de semana</h2>
-  <p class="muted" style="max-width:40rem">Lo vivimos. Con buena voluntad no alcanza cuando hay 40 voluntarios anotando a la vez.</p>
+  <h2>Lo que pasa en la bodega cuando los pedidos crecen más rápido que el Excel</h2>
+  <p class="muted" style="max-width:40rem">Si despachas más de 20 cajas al día, alguna de estas ya te pasó.</p>
   <div class="grid c2" style="margin-top:24px">
-    <div class="card pain"><h3>Cajas duplicadas o perdidas</h3><p class="muted">Dos personas numeran la misma caja, otra queda sin número, y una tercera aparece en dos pallets. Nadie sabe cuál es la verdad.</p></div>
-    <div class="card pain"><h3>Listas de empaque a mano</h3><p class="muted">Cada caja necesita su lista pegada afuera. Escribirlas a mano o en Word se come el tiempo que debería ir a clasificar.</p></div>
-    <div class="card pain"><h3>El mismo producto, escrito de 20 formas</h3><p class="muted">"paracetamol 500", "PARACETAMOL 500MG", "Paracetamol 500 mg x16"… y después no hay cómo saber cuánto hay de cada cosa.</p></div>
-    <div class="card pain"><h3>Aduana pide lo que no tienes</h3><p class="muted">Packing list por pallet, código arancelario (HS) por producto y valores. Reconstruirlo desde fotos y cuadernos tarda semanas.</p></div>
+    <div class="card pain"><h3>Cajas sin trazabilidad</h3><p class="muted">Se prepara el pedido, se cierra la caja y nadie sabe después qué iba adentro, quién la armó ni en qué pallet salió.</p></div>
+    <div class="card pain"><h3>Pallets que salen incompletos o repetidos</h3><p class="muted">Una caja queda en el piso, otra se sube dos veces, y el reclamo llega una semana después desde el cliente.</p></div>
+    <div class="card pain"><h3>El transportista pide el packing list ahora</h3><p class="muted">El camión está en la puerta y el documento hay que armarlo a mano desde fotos y cuadernos.</p></div>
+    <div class="card pain"><h3>Importas o exportas y aduana quiere HS y valores</h3><p class="muted">Reconstruir el detalle por pallet con códigos arancelarios toma días y frena el embarque.</p></div>
   </div>
 </div></section>
 
 <section id="como" style="background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap">
-  <h2>Tres pasos, desde el celular</h2>
+  <h2>Tres pasos, desde el celular de tu equipo</h2>
   <div class="grid c2" style="margin-top:24px;align-items:start">
-    <div class="steps">
-      <div class="step"><div class="n">1</div><div><h3>Registra la caja</h3><p class="muted">Toca "Nueva caja" y el código sale solo (QN-0001, QN-0002…). Anota cantidad, descripción, marca y unidad. El diccionario reconoce el producto mientras escribes y le asigna categoría. Imprime la lista de empaque con QR.</p></div></div>
-      <div class="step"><div class="n">2</div><div><h3>Arma el pallet escaneando</h3><p class="muted">Abre un pallet y escanea el QR de cada caja que subes. Si la caja no existe o ya está en otro pallet, Acopia avisa al instante y registra la incidencia. Cierra el pallet con sus medidas y peso.</p></div></div>
-      <div class="step"><div class="n">3</div><div><h3>Cierra el envío y descarga los documentos</h3><p class="muted">Agrupa pallets en un envío (contenedor, camión, vuelo) y descarga el packing list detallado, el resumen por producto con código HS y la lista de pallets. Listo para el agente de aduana.</p></div></div>
+    <div>
+      <div class="step"><div class="n">1</div><div><h3>Registra la caja</h3><p class="muted">Toca "Nueva caja": el código sale solo (BQ-0001, BQ-0002…). Anota cantidad, producto, marca y presentación. El diccionario reconoce el producto mientras escribes. Imprime la lista de empaque con QR y pégala en la caja.</p></div></div>
+      <div class="step"><div class="n">2</div><div><h3>Arma el pallet escaneando</h3><p class="muted">Abre un pallet y escanea el QR de cada caja que subes. Si la caja no existe o ya está en otro pallet, Acopiar avisa al instante y deja la incidencia registrada. Cierra el pallet con sus medidas y peso.</p></div></div>
+      <div class="step"><div class="n">3</div><div><h3>Cierra el despacho y descarga los documentos</h3><p class="muted">Agrupa pallets en un despacho (camión, contenedor, courier) y descarga el packing list detallado, el resumen por producto con código HS y la lista de pallets. Listo para el transportista o el agente de aduana.</p></div></div>
     </div>
     <div class="grid">
       <div class="card"><div class="ico">🏷️</div><h3>Etiquetas y listas de empaque con QR</h3><p class="muted small">Una hoja por caja, lista para pegar. También etiquetas de pallet.</p></div>
-      <div class="card"><div class="ico">📚</div><h3>Diccionario con 7.900 productos</h3><p class="muted small">Medicamentos, insumos, alimentos, higiene y EPP ya reconocidos. Y aprende los tuyos.</p></div>
-      <div class="card"><div class="ico">🏭</div><h3>Varias bodegas, un solo panel</h3><p class="muted small">Cada bodega con su prefijo y su correlativo. El panel consolida todo en tiempo real.</p></div>
-      <div class="card"><div class="ico">👥</div><h3>Voluntarios sin capacitación</h3><p class="muted small">Invítalos con un código de 6 letras. Cada caja queda con el nombre de quien la registró.</p></div>
+      <div class="card"><div class="ico">📚</div><h3>Diccionario con 7.900 productos</h3><p class="muted small">Normaliza lo que cada persona escribe distinto y aprende tus productos.</p></div>
+      <div class="card"><div class="ico">🏭</div><h3>Varias bodegas, un solo panel</h3><p class="muted small">Cada bodega con su prefijo y correlativo. El panel consolida todo en tiempo real.</p></div>
+      <div class="card"><div class="ico">💬</div><h3>Lía te guía paso a paso</h3><p class="muted small">Asistente dentro de la app y por correo: configura tu bodega y resuelve dudas al instante.</p></div>
     </div>
   </div>
 </div></section>
 
-<section id="historia"><div class="wrap">
+<section id="usos"><div class="wrap">
+  <h2>Para quién es</h2>
+  <div class="grid c4" style="margin-top:24px">
+    <div class="card"><div class="ico">🛒</div><h3>Ecommerce y fulfillment</h3><p class="muted small">Pedidos en cajas con QR, pallets por camión o courier, packing list por despacho.</p></div>
+    <div class="card"><div class="ico">🚚</div><h3>Distribuidores y couriers</h3><p class="muted small">Consolidación por pallet, validación al cargar, trazabilidad de quién armó qué.</p></div>
+    <div class="card"><div class="ico">🌐</div><h3>Importadores y exportadores</h3><p class="muted small">Packing list por pallet con código HS y valores, listo para aduana.</p></div>
+    <div class="card"><div class="ico">🌾</div><h3>Centros de acopio</h3><p class="muted small">Agro, reciclaje, textil: recepción por caja, lotes por pallet, despachos por lote.</p></div>
+  </div>
+  <div class="comunidad">
+    <h3>Programa Comunidad: gratis en emergencias</h3>
+    <p class="muted" style="margin:0">Acopiar nació en una operación real de ayuda en catástrofe. Por eso, cuando una comunidad monta un centro de acopio de emergencia o una campaña solidaria, le damos el plan completo <b>gratis por 90 días</b>, sin tarjeta ni trámites: se activa desde la app contando en dos frases de qué se trata.</p>
+  </div>
+</div></section>
+
+<section id="historia" style="background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap">
   <div class="grid c2" style="align-items:center">
     <div>
-      <span class="kicker">De dónde viene</span>
+      <span class="kicker">Probado en condiciones extremas</span>
       <h2>Nació en una bodega real, no en una oficina</h2>
-      <p>En 2026 una red de voluntarios en Chile montó cuatro bodegas para enviar ayuda humanitaria a Venezuela. En 65 días registraron 2.143 cajas con 439.000 ítems, armaron 83 pallets y despacharon 29 toneladas en un contenedor.</p>
-      <p>Empezaron con planillas. A las dos semanas había cajas repetidas, pallets con contenido duplicado y listas de empaque imposibles de reconstruir. El sistema que resolvió eso es el que hoy es Acopia: los correlativos por bodega, la validación al paletizar, el diccionario de productos y el packing list para aduana salieron de ese problema concreto.</p>
-      <p class="muted small">Las incidencias que Acopia detecta (caja inexistente, caja en dos pallets, pallet duplicado) son exactamente las que aparecieron en esa operación.</p>
+      <p>En 2026, cuatro bodegas con 127 personas registrando a la vez movieron 2.143 cajas, 439.000 ítems y 83 pallets en 65 días, y despacharon 29 toneladas en contenedor con el packing list completo para aduana.</p>
+      <p>Empezaron con planillas. A las dos semanas había cajas repetidas, pallets con contenido duplicado y documentos imposibles de reconstruir. El sistema que resolvió eso es Acopiar: los correlativos por bodega, la validación al paletizar, el diccionario de productos y los documentos de despacho salieron de ese problema concreto. Si aguantó eso, aguanta tu temporada alta.</p>
     </div>
-    <div class="quote">"Lo que más tiempo nos ahorró fue que la caja ya saliera con su número y su lista impresa. Y cuando aduana pidió el packing list por pallet, lo teníamos."<footer>Coordinación de bodega, campaña de ayuda a Venezuela 2026</footer></div>
+    <div class="quote">"Lo que más tiempo nos ahorró fue que la caja ya saliera con su número y su lista impresa. Y cuando pidieron el packing list por pallet, lo teníamos."<footer>Coordinación de bodega, operación de 29 toneladas, 2026</footer></div>
   </div>
 </div></section>
 
-<section id="precios" style="background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap">
-  <h2>Gratis para acopiar. Pagas solo cuando despachas.</h2>
-  <p class="muted">Sin tarjeta para empezar, sin contratos, sin llamadas. Todo se compra y se activa desde la web en segundos.</p>
-  <div class="grid c3" style="margin-top:28px">
-    <div class="card price"><h3>Gratis</h3><div class="p">US$0</div><ul><li>Bodegas, cajas y pallets sin límite</li><li>Voluntarios ilimitados</li><li>Listas de empaque y etiquetas QR</li><li>Validación al paletizar e incidencias</li><li>Panel en tiempo real</li></ul><a class="btn sec block" href="app/" data-ev="cta_gratis">Crear cuenta gratis</a></div>
-    <div class="card price best rel"><span class="tag">Pagas al despachar</span><h3>Campaña</h3><div class="p">US$97 <small>/ 90 días</small></div><ul><li>Todo lo del plan gratis</li><li>Cierra todos los envíos que necesites en 90 días</li><li>Packing list para aduana con código HS</li><li>Resumen por producto y lista de pallets</li><li><b>Garantía de 30 días:</b> si no te sirvió, devolvemos el dinero</li></ul><a class="btn block" href="app/" data-ev="cta_campana">Empezar gratis y pagar al despachar</a></div>
-    <div class="card price"><h3>Pro</h3><div class="p">US$297 <small>/ año</small></div><ul><li>Todo lo de Campaña durante 365 días</li><li>Varias campañas al año</li><li>Diccionario propio compartido</li><li>Prioridad en nuevas funciones</li></ul><a class="btn sec block" href="app/" data-ev="cta_pro">Crear cuenta gratis</a></div>
+<section id="precios"><div class="wrap">
+  <h2>Gratis para empezar. Pagas cuando despachas.</h2>
+  <p class="muted">Registrar cajas, armar pallets e invitar a tu equipo no cuesta nada. El plan se activa en línea con tarjeta, en segundos, y lo cancelas cuando quieras.</p>
+  <div class="grid c4" style="margin-top:28px">
+    <div class="card price"><h3>Gratis</h3><div class="p">US$0</div><ul><li>Cajas, pallets y bodegas sin límite</li><li>Etiquetas QR y listas de empaque</li><li>Validación al paletizar</li><li>Panel en tiempo real</li><li>Despachos: se cierran con un plan</li></ul><a class="btn sec block" href="app/" data-ev="cta_gratis">Crear cuenta</a></div>
+    <div class="card price best rel"><span class="tag">Para empezar a despachar</span><h3>Emprendedor</h3><div class="p">US$19 <small>/ mes</small></div><ul><li>Todo lo del plan gratis</li><li>Despachos ilimitados con packing list</li><li>1 bodega, hasta 3 usuarios</li><li>Todo automático: se activa y renueva solo</li></ul><a class="btn block" href="app/" data-ev="cta_emprendedor">Empezar gratis</a></div>
+    <div class="card price"><h3>Bodega</h3><div class="p">US$49 <small>/ mes</small></div><ul><li>Todo lo de Emprendedor</li><li>Bodegas y usuarios ilimitados</li><li>Incidencias y auditoría por operador</li><li>Resumen por producto con código HS</li></ul><a class="btn sec block" href="app/" data-ev="cta_bodega">Empezar gratis</a></div>
+    <div class="card price"><h3>Temporada</h3><div class="p">US$97 <small>/ 90 días</small></div><ul><li>Todo lo de Bodega por 90 días</li><li>Para ferias, temporada alta, proyectos y operaciones puntuales</li><li>Pago único, sin renovación</li></ul><a class="btn sec block" href="app/" data-ev="cta_temporada">Empezar gratis</a></div>
   </div>
-  <p class="small muted" style="margin-top:16px">Pago en línea con tarjeta (procesado por nuestra pasarela). El plan se activa automáticamente en segundos con el correo de tu cuenta.</p>
+  <p class="small muted" style="margin-top:16px">Garantía de 30 días en todos los planes: si no te sirvió, devolvemos el dinero. Tus datos siempre se pueden exportar.</p>
 </div></section>
 
-<section id="faq"><div class="wrap" style="max-width:760px">
+<section id="faq" style="background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap" style="max-width:760px">
   <h2>Preguntas frecuentes</h2>
-  <details><summary>¿Cuándo pago?</summary><p class="muted">Nunca por registrar, paletizar o invitar voluntarios. Pagas US$97 cuando cierras un envío y necesitas los documentos (packing list, resumen con HS, lista de pallets). Si al final no despachas, no pagas.</p></details>
-  <details><summary>¿Y si no me sirve?</summary><p class="muted">Garantía de 30 días: escríbenos por correo y devolvemos el dinero, sin preguntas. Tus datos siguen siendo tuyos y puedes exportarlos.</p></details>
-  <details><summary>¿Hay que instalar algo?</summary><p class="muted">No. Funciona en el navegador del celular o del computador. Si quieres, se agrega a la pantalla de inicio como una app.</p></details>
-  <details><summary>¿Cómo imprimimos las listas de empaque?</summary><p class="muted">Desde cualquier impresora conectada al computador o al celular. Se genera una hoja por caja con el código, el QR y el contenido. También puedes imprimir solo la etiqueta.</p></details>
-  <details><summary>¿Cómo escanean los voluntarios?</summary><p class="muted">Con la cámara del celular, sin apps externas (Android y iPhone recientes). Si el celular no tiene lector, escriben el código.</p></details>
-  <details><summary>¿Sirve si no es ayuda humanitaria?</summary><p class="muted">Sí: bancos de alimentos, roperos solidarios, colectas escolares, campañas de iglesias y bodegas de fundaciones usan el mismo flujo caja → pallet → envío.</p></details>
-  <details><summary>¿Nuestros datos están seguros?</summary><p class="muted">Cada organización ve solo lo suyo, con control de acceso en la base de datos. Puedes exportar todo a CSV cuando quieras.</p></details>
-  <details><summary>¿Funciona sin internet?</summary><p class="muted">Necesita conexión (basta con datos móviles). Estamos trabajando en una cola para registrar sin señal y sincronizar después.</p></details>
+  <details><summary>¿Cuándo pago?</summary><p class="muted">Nunca por registrar cajas, armar pallets o invitar a tu equipo. Pagas cuando cierras un despacho y necesitas sus documentos. El plan Emprendedor se activa en línea y se renueva solo cada mes; lo cancelas cuando quieras.</p></details>
+  <details><summary>¿Es un sistema de inventario?</summary><p class="muted">Es control de bodega por cajas, pallets y despachos: qué va en cada caja, en qué pallet salió y en qué despacho. Si necesitas stock por SKU con órdenes de compra, Acopiar no es eso (todavía).</p></details>
+  <details><summary>¿Hay que instalar algo?</summary><p class="muted">No. Funciona en el navegador del celular o del computador. Se agrega a la pantalla de inicio como una app.</p></details>
+  <details><summary>¿Cómo imprimimos las listas de empaque?</summary><p class="muted">Desde cualquier impresora conectada al computador o al celular. Una hoja por caja con código, QR y contenido; o solo la etiqueta.</p></details>
+  <details><summary>¿Cómo escanea el equipo?</summary><p class="muted">Con la cámara del celular, sin apps externas (Android y iPhone recientes). Si el celular no tiene lector, escriben el código.</p></details>
+  <details><summary>¿Qué es el Programa Comunidad?</summary><p class="muted">Si tu organización monta un centro de acopio por una emergencia (inundación, terremoto, incendio) o una campaña solidaria, activa desde la app el plan completo gratis por 90 días contando en dos frases de qué se trata. Sin tarjeta, sin aprobación previa. Es nuestra forma de devolver lo que aprendimos.</p></details>
+  <details><summary>¿Y si no me sirve?</summary><p class="muted">Garantía de 30 días: escríbenos y devolvemos el dinero, sin preguntas. Tus datos siguen siendo tuyos y se exportan a CSV.</p></details>
+  <details><summary>¿Nuestros datos están seguros?</summary><p class="muted">Cada empresa ve solo lo suyo, con control de acceso en la base de datos. Puedes exportar todo cuando quieras.</p></details>
+</div></section>
+
+<section id="lia"><div class="wrap" style="max-width:720px">
+  <h2>¿Dudas antes de empezar? Pregúntale a Lía.</h2>
+  <p class="muted">Lía es la asistente de Acopiar. Te responde por correo en minutos: si sirve para tu bodega, cómo partir, qué plan te conviene.</p>
+  <form id="lia" class="card">
+    <div class="f2">
+      <div class="campo"><label for="nombre">Tu nombre</label><input id="nombre" name="nombre" required autocomplete="name"></div>
+      <div class="campo"><label for="email">Tu correo</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+    </div>
+    <div class="campo"><label for="negocio">Tu negocio (qué vendes o mueves)</label><input id="negocio" name="negocio" placeholder="Ej: tienda online de ropa, 40 pedidos al día"></div>
+    <div class="campo"><label for="pregunta">Tu pregunta</label><textarea id="pregunta" name="pregunta" rows="3" required placeholder="Ej: ¿Sirve si despacho por courier y no por pallet?"></textarea></div>
+    <input type="text" name="empresa_web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+    <div id="lia-msg"></div>
+    <button class="btn block" type="submit" data-ev="lia_submit">Preguntar a Lía</button>
+    <p class="small muted" style="margin:.75rem 0 0">Solo usamos tu correo para responderte. <a href="privacidad.html">Privacidad</a>.</p>
+  </form>
 </div></section>
 
 <section id="empezar" style="background:var(--brand);color:#fff"><div class="wrap" style="max-width:720px;text-align:center">
   <h2 style="color:#fff">Tu primera caja con etiqueta QR en los próximos 3 minutos.</h2>
-  <p style="color:#d9f0ec">Crea tu cuenta, ponle nombre a tu bodega y registra la primera caja. Sin tarjeta, sin llamadas, sin formularios de contacto.</p>
-  <a class="btn accent" style="font-size:1.15rem;padding:1.1rem 1.8rem" href="app/" data-ev="cta_final">Crear cuenta gratis</a>
-  <p class="small" style="color:#d9f0ec;margin-top:1rem">¿Dudas? Soporte por correo: <a style="color:#fff" href="mailto:elias@tuescuelademarcas.cl?subject=Acopia">elias@tuescuelademarcas.cl</a></p>
+  <p style="color:#d9f0ec">Crea tu cuenta, ponle nombre a tu bodega y registra la primera caja. Sin tarjeta y sin llamadas.</p>
+  <a class="btn accent" style="font-size:1.15rem;padding:1.1rem 1.8rem" href="app/" data-ev="cta_final">Empezar gratis</a>
 </div></section>
 
 <footer class="pie"><div class="wrap">
-  <div><b style="color:var(--brand)">Acopia</b> · Hecho en Chile para Latinoamérica</div>
-  <div><a href="app/">Entrar</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a> · <a href="mailto:elias@tuescuelademarcas.cl?subject=Acopia">Soporte</a></div>
+  <div><b style="color:var(--brand)">Acopiar</b> · Hecho en Chile para Latinoamérica</div>
+  <div><a href="app/">Entrar</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos</a> · <a href="#lia">Soporte</a></div>
 </div></footer>
 
 <script>
 (function(){
   var utm={};new URLSearchParams(location.search).forEach(function(v,k){if(/^(utm_|fbclid|ref)/.test(k))utm[k]=v});
-  try{if(Object.keys(utm).length)localStorage.setItem('acopia.utm',JSON.stringify(utm))}catch(e){}
+  try{if(Object.keys(utm).length)localStorage.setItem('acopiar.utm',JSON.stringify(utm));else utm=JSON.parse(localStorage.getItem('acopiar.utm')||'{}')}catch(e){}
   function track(ev,extra){try{if(window.fbq)fbq('trackCustom',ev,extra||{})}catch(e){}}
   document.querySelectorAll('[data-ev]').forEach(function(a){a.addEventListener('click',function(){track(a.getAttribute('data-ev'))})});
+  var f=document.getElementById('lia');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var btn=f.querySelector('button[type=submit]'),msg=document.getElementById('lia-msg');
+    if(f.empresa_web.value){msg.innerHTML='<div class="ok">¡Gracias! Lía te escribe en minutos.</div>';return}
+    var d={nombre:f.nombre.value,email:f.email.value,negocio:f.negocio.value,pregunta:f.pregunta.value,origen:location.href,utm:utm};
+    btn.disabled=true;btn.textContent='Enviando…';msg.innerHTML='';
+    fetch('https://devn8n.tuescuelademarcas.cl/webhook/acopiar-lia-correo',{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d)})
+      .then(function(r){if(!r.ok)throw new Error(r.status);return r.text()})
+      .then(function(){msg.innerHTML='<div class="ok">¡Listo, '+d.nombre.split(' ')[0]+'! Lía te responde a '+d.email+' en unos minutos. Mientras tanto puedes <a href="app/">crear tu cuenta gratis</a>.</div>';f.reset();track('Lead');try{if(window.fbq)fbq('track','Lead')}catch(e){}})
+      .catch(function(){msg.innerHTML='<div class="err">No pudimos enviar tu pregunta. Escríbenos a <a href="mailto:elias@tuescuelademarcas.cl?subject=Acopiar">elias@tuescuelademarcas.cl</a>.</div>'})
+      .finally(function(){btn.disabled=false;btn.textContent='Preguntar a Lía'});
+  });
 })();
 </script>
 </body>

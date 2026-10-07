@@ -3,21 +3,23 @@ import { supabase, mensajeError } from '../lib/supabase'
 import { fmt, fecha, fechaHora } from '../components/Layout'
 
 interface OrgAdmin { org_id: string; nombre: string; pais: string | null; tipo: string | null; plan: string; plan_vence: string | null; created_at: string; admin_email: string | null; admin_nombre: string | null; cajas: number; miembros: number }
+interface Comunidad { org_id: string; org: string; pais: string | null; motivo: string; enlace: string | null; created_at: string; plan_vence: string | null }
 interface Lead { id: number; nombre: string | null; email: string | null; whatsapp: string | null; organizacion: string | null; pais: string | null; cuando: string | null; origen: string | null; utm: Record<string, string> | null; created_at: string }
 
 // Panel interno de Elías: activar planes a mano y ver leads. Solo lo ve el superadmin (ac_config.superadmin_email).
 export function Admin() {
   const [orgs, setOrgs] = useState<OrgAdmin[]>([])
   const [leads, setLeads] = useState<Lead[]>([])
+  const [comunidad, setComunidad] = useState<Comunidad[]>([])
   const [err, setErr] = useState<string | null>(null)
   const [msg, setMsg] = useState<string | null>(null)
-  const [f, setF] = useState({ email: '', plan: 'campana', dias: '90' })
+  const [f, setF] = useState({ email: '', plan: 'emprendedor', dias: '31' })
 
   const cargar = useCallback(async () => {
     setErr(null)
-    const [a, b] = await Promise.all([supabase.rpc('ac_admin_orgs'), supabase.rpc('ac_admin_leads')])
+    const [a, b, c] = await Promise.all([supabase.rpc('ac_admin_orgs'), supabase.rpc('ac_admin_leads'), supabase.rpc('ac_admin_comunidad')])
     if (a.error) { setErr(mensajeError(a.error)); return }
-    setOrgs(a.data ?? []); setLeads(b.data ?? [])
+    setOrgs(a.data ?? []); setLeads(b.data ?? []); setComunidad(c.data ?? [])
   }, [])
   useEffect(() => { void cargar() }, [cargar])
 
@@ -45,7 +47,7 @@ export function Admin() {
         <p className="muted small">Tras recibir el pago, escribe el correo con el que el cliente creó su cuenta.</p>
         <div className="campos-3">
           <div className="campo" style={{ gridColumn: 'span 3' }}><label>Correo del administrador de la organización</label><input type="email" required value={f.email} onChange={e => setF(x => ({ ...x, email: e.target.value }))} /></div>
-          <div className="campo"><label>Plan</label><select value={f.plan} onChange={e => setF(x => ({ ...x, plan: e.target.value, dias: e.target.value === 'pro' ? '365' : e.target.value === 'campana' ? '90' : '0' }))}><option value="campana">Campaña</option><option value="pro">Pro</option><option value="gratis">Volver a gratis</option></select></div>
+          <div className="campo"><label>Plan</label><select value={f.plan} onChange={e => setF(x => ({ ...x, plan: e.target.value, dias: e.target.value === 'temporada' || e.target.value === 'comunidad' ? '90' : e.target.value === 'gratis' ? '0' : '31' }))}><option value="emprendedor">Emprendedor (mes)</option><option value="bodega">Bodega (mes)</option><option value="temporada">Temporada (90 días)</option><option value="comunidad">Comunidad (90 días)</option><option value="gratis">Volver a gratis</option></select></div>
           <div className="campo"><label>Días</label><input inputMode="numeric" value={f.dias} onChange={e => setF(x => ({ ...x, dias: e.target.value }))} /></div>
           <div className="campo" style={{ alignSelf: 'end' }}><button className="block">Activar</button></div>
         </div>
@@ -55,6 +57,10 @@ export function Admin() {
         <h2>Organizaciones</h2>
         <div className="tabla-wrap"><table><thead><tr><th>Organización</th><th>Admin</th><th>Plan</th><th className="num">Cajas</th><th className="num">Equipo</th><th>Creada</th></tr></thead>
           <tbody>{orgs.map(o => <tr key={o.org_id}><td><b>{o.nombre}</b><div className="small muted">{o.pais} · {o.tipo}</div></td><td className="small">{o.admin_nombre}<div className="muted">{o.admin_email}</div></td><td><span className={`chip ${o.plan === 'gratis' ? '' : 'ok'}`}>{o.plan}</span>{o.plan_vence ? <div className="small muted">hasta {fecha(o.plan_vence)}</div> : null}</td><td className="num">{fmt(o.cajas)}</td><td className="num">{fmt(o.miembros)}</td><td className="small">{fecha(o.created_at)}</td></tr>)}</tbody></table></div>
+      </div>
+      <div className="card">
+        <h2>Programa Comunidad ({comunidad.length})</h2>
+        {comunidad.length === 0 ? <p className="muted">Sin activaciones.</p> : <div className="lista">{comunidad.map(c => <div key={c.org_id} className="item"><div className="grow"><b>{c.org}</b> <span className="chip">{c.pais}</span><div className="sub">{c.motivo}{c.enlace ? <> · <a href={c.enlace} target="_blank" rel="noreferrer">enlace</a></> : null} · {fechaHora(c.created_at)} · hasta {fecha(c.plan_vence)}</div></div></div>)}</div>}
       </div>
       <div className="card">
         <h2>Leads</h2>

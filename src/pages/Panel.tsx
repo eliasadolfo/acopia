@@ -34,7 +34,7 @@ export function Panel() {
             <div className="kpi"><div className="v">{fmt(p.peso_paletizado / 1000, 2)} t</div><div className="l">Peso paletizado</div></div>
             <div className="kpi"><div className="v">{fmt(p.items)}</div><div className="l">Ítems (suma de cantidades)</div></div>
             <div className="kpi"><div className="v">{fmt(p.lineas)}</div><div className="l">Líneas de inventario</div></div>
-            <div className="kpi"><div className="v">{fmt(p.envios)}</div><div className="l">Envíos</div></div>
+            <div className="kpi"><div className="v">{fmt(p.envios)}</div><div className="l">Despachos</div></div>
             <div className={`kpi ${p.incidencias ? 'warn' : ''}`}><div className="v">{fmt(p.incidencias)}</div><div className="l">Incidencias abiertas</div></div>
           </div>
           {lim && p.cajas >= lim * 0.8 && (
@@ -56,8 +56,8 @@ export function Panel() {
           </div>
           {p.por_envio.length > 0 && (
             <div className="card">
-              <h2>Envíos</h2>
-              <div className="tabla-wrap"><table><thead><tr><th>Envío</th><th>Estado</th><th className="num">Pallets</th><th className="num">Cajas</th><th className="num">Ítems</th><th className="num">Peso (kg)</th></tr></thead>
+              <h2>Despachos</h2>
+              <div className="tabla-wrap"><table><thead><tr><th>Despacho</th><th>Estado</th><th className="num">Pallets</th><th className="num">Cajas</th><th className="num">Ítems</th><th className="num">Peso (kg)</th></tr></thead>
                 <tbody>{p.por_envio.map(e => <tr key={e.codigo}><td><b>{e.codigo}</b>{e.nombre ? <div className="small muted">{e.nombre}</div> : null}</td><td><span className={`chip ${e.estado === 'cerrado' ? 'ok' : 'warn'}`}>{e.estado}</span></td><td className="num">{fmt(e.pallets)}</td><td className="num">{fmt(e.cajas)}</td><td className="num">{fmt(e.items)}</td><td className="num">{fmt(e.peso, 1)}</td></tr>)}</tbody></table></div>
             </div>
           )}

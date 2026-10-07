@@ -17,13 +17,13 @@ export function Layout({ children }: { children: ReactNode }) {
   const seccion = ruta.partes[0] ?? 'panel'
   const plan = org ? planVigente(org) : 'gratis'
   const tabs = [
-    ['panel', 'Panel', Ico.panel], ['cajas', 'Cajas', Ico.cajas], ['pallets', 'Pallets', Ico.pallets], ['envios', 'Envíos', Ico.envios], ['mas', 'Más', Ico.mas],
+    ['panel', 'Panel', Ico.panel], ['cajas', 'Cajas', Ico.cajas], ['pallets', 'Pallets', Ico.pallets], ['envios', 'Despachos', Ico.envios], ['mas', 'Más', Ico.mas],
   ] as const
   const activosCentros = centros.filter(c => c.activo)
   return (
     <div className="app">
       <header className="topbar">
-        <a className="logo" href="#/panel">Acopia</a>
+        <a className="logo" href="#/panel">Acopiar</a>
         <div className="grow" />
         {orgs.length > 1 && (
           <select aria-label="Organización" value={org?.id ?? ''} onChange={e => elegirOrg(e.target.value)}>
@@ -38,7 +38,7 @@ export function Layout({ children }: { children: ReactNode }) {
         {plan !== 'gratis' ? <span className="chip ok">{PLANES[plan].nombre}</span> : <button className="sm accent" onClick={() => ir('/plan')}>Gratis</button>}
       </header>
       <nav className="nav" aria-label="Secciones">
-        {tabs.map(([k, l, i]) => <a key={k} href={`#/${k}`} className={seccion === k || (k === 'mas' && ['incidencias', 'equipo', 'plan', 'bodegas', 'ajustes'].includes(seccion)) ? 'activo' : ''}>{i}<span>{l}</span></a>)}
+        {tabs.map(([k, l, i]) => <a key={k} href={`#/${k}`} className={seccion === k || (k === 'mas' && ['incidencias', 'equipo', 'plan', 'bodegas', 'ajustes', 'admin', 'lia'].includes(seccion)) ? 'activo' : ''}>{i}<span>{l}</span></a>)}
       </nav>
       <main className="main">{children}</main>
     </div>

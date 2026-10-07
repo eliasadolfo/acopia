@@ -17,10 +17,11 @@ export function Mas() {
   const [superadmin, setSuperadmin] = useState(false)
   useEffect(() => { supabase.rpc('ac_soy_superadmin').then(r => setSuperadmin(r.data === true)) }, [])
   const items = [
+    ['/lia', '💬', 'Lía, tu asistente', 'Te guía paso a paso y responde dudas al instante'],
     ['/incidencias', '⚠️', 'Incidencias', 'Cajas inexistentes o duplicadas al paletizar'],
     ['/equipo', '👥', 'Equipo', 'Invitar voluntarios con un código'],
     ['/bodegas', '🏭', 'Bodegas', 'Centros de acopio y prefijos'],
-    ['/plan', '⭐', `Plan: ${PLANES[plan].nombre}`, plan === 'gratis' ? 'Activa Campaña o Pro' : 'Ver estado del plan'],
+    ['/plan', '⭐', `Plan: ${PLANES[plan].nombre}`, plan === 'gratis' ? 'Desde US$19 al mes · Comunidad gratis en emergencias' : 'Ver estado del plan'],
     ...(superadmin ? [['/admin', '🛠', 'Administración de Acopia', 'Organizaciones, leads y activación de planes']] : []),
   ]
   return (
@@ -137,21 +138,32 @@ export function Bodegas() {
 }
 
 export function Plan() {
-  const { org, session, oferta } = useStore()
+  const { org, session, oferta, recargar } = useStore()
+  const [motivo, setMotivo] = useState('')
+  const [enlace, setEnlace] = useState('')
+  const [msg, setMsg] = useState<string | null>(null)
+  const [err, setErr] = useState<string | null>(null)
+  const [abrirComunidad, setAbrirComunidad] = useState(false)
   if (!org) return null
   const plan = planVigente(org)
   const sinTope = oferta.oferta === 'despacho'
   const q = `?checkout[email]=${encodeURIComponent(session?.user.email ?? '')}&checkout[custom][org]=${org.id}`
   const planes = [
-    { k: 'gratis', n: 'Gratis', p: 'US$0', d: sinTope ? 'Registra, paletiza e invita voluntarios sin límite' : 'Para empezar hoy', f: sinTope ? ['Bodegas, cajas y pallets sin límite', 'Voluntarios ilimitados', 'Listas de empaque y etiquetas QR', 'Incidencias y panel', 'Envíos: se cierran con un plan pagado'] : ['1 bodega', '150 cajas', '1 envío', 'Voluntarios ilimitados', 'Listas de empaque y QR'] },
-    { k: 'campana', n: 'Campaña', p: 'US$97', s: 'por 90 días', d: sinTope ? 'Pagas solo cuando despachas' : 'Para una emergencia o colecta', f: ['Cierra todos los envíos que necesites en 90 días', 'Packing list para aduana con código HS', 'Resumen por producto y lista de pallets', 'Garantía de 30 días: si no te sirvió, devolvemos el dinero'], url: CHECKOUT.campana },
-    { k: 'pro', n: 'Pro', p: 'US$297', s: 'por año', d: 'Para organizaciones que acopian todo el año', f: ['Todo lo de Campaña durante 365 días', 'Varias campañas al año', 'Diccionario propio compartido', 'Prioridad en nuevas funciones'], url: CHECKOUT.pro },
+    { k: 'gratis', n: 'Gratis', p: 'US$0', d: sinTope ? 'Registra, paletiza e invita a tu equipo sin límite' : 'Para empezar hoy', f: sinTope ? ['Cajas, pallets y bodegas sin límite', 'Usuarios ilimitados', 'Etiquetas QR y listas de empaque', 'Validación al paletizar y panel', 'Despachos: se cierran con un plan'] : ['1 bodega', '150 cajas', '1 despacho', 'Usuarios ilimitados', 'Listas de empaque y QR'] },
+    { k: 'emprendedor', n: 'Emprendedor', p: 'US$19', s: 'al mes', d: 'Para empezar a despachar', f: ['Despachos ilimitados con packing list', '1 bodega, hasta 3 usuarios', 'Se activa y renueva solo; cancela cuando quieras', 'Garantía de 30 días'], url: CHECKOUT.emprendedor },
+    { k: 'bodega', n: 'Bodega', p: 'US$49', s: 'al mes', d: 'Para operaciones con equipo', f: ['Todo lo de Emprendedor', 'Bodegas y usuarios ilimitados', 'Incidencias y auditoría por operador', 'Resumen por producto con código HS'], url: CHECKOUT.bodega },
+    { k: 'temporada', n: 'Temporada', p: 'US$97', s: 'por 90 días', d: 'Ferias, temporada alta, proyectos', f: ['Todo lo de Bodega durante 90 días', 'Pago único, sin renovación'], url: CHECKOUT.temporada },
   ]
+  async function activarComunidad(e: FormEvent) {
+    e.preventDefault(); setErr(null); setMsg(null)
+    try { const r = await db.activarComunidad(org!.id, motivo, enlace); setMsg(`Programa Comunidad activo hasta ${fecha(r.vence)}. Gracias por lo que están haciendo.`); await recargar() } catch (er) { setErr(mensajeError(er)) }
+  }
   return (
     <div className="stack">
       <div><a href="#/mas" className="small">← Más</a><h1>Plan</h1></div>
-      <div className="card">Tu plan actual: <b>{PLANES[plan].nombre}</b>{org.plan_vence && plan !== 'gratis' ? <span className="muted"> · vence {fecha(org.plan_vence)}</span> : null}
-        {org.plan !== 'gratis' && plan === 'gratis' && <div className="aviso">Tu plan {org.plan} venció. Vuelve a activarlo para seguir sin límites.</div>}
+      <div className="card">Tu plan actual: <b>{PLANES[plan].nombre}</b>{org.plan_vence && plan !== 'gratis' ? <span className="muted"> · hasta {fecha(org.plan_vence)}</span> : null}
+        {org.plan !== 'gratis' && plan === 'gratis' && <div className="aviso">Tu plan {org.plan} venció. Vuelve a activarlo para seguir cerrando despachos.</div>}
+        {msg && <div className="exito">{msg}</div>}
       </div>
       {planes.map(p => (
         <div key={p.k} className="card" style={plan === p.k ? { borderColor: 'var(--brand)' } : undefined}>
@@ -161,7 +173,19 @@ export function Plan() {
           {p.k !== 'gratis' && (p.url ? <a className="btn block accent" href={p.url + q} target="_blank" rel="noreferrer">Activar {p.n} · pago en línea</a> : <button className="block sec" disabled>Pago en línea disponible muy pronto</button>)}
         </div>
       ))}
-      <p className="small muted">El pago es en línea con tarjeta y el plan se activa solo, en segundos, con el mismo correo de tu cuenta ({session?.user.email}). Sin llamadas ni formularios. Soporte: {SOPORTE_EMAIL}.</p>
+      <div className="card" style={{ borderStyle: 'dashed' }}>
+        <h2>Programa Comunidad</h2>
+        <p className="muted small">Si esta bodega es un centro de acopio de emergencia (inundación, terremoto, incendio) o una campaña solidaria, activa el plan completo gratis por 90 días. Sin tarjeta. Una vez por organización.</p>
+        {plan === 'comunidad' ? <div className="exito">Comunidad activo hasta {fecha(org.plan_vence)}.</div> : !abrirComunidad ? <button className="sec" onClick={() => setAbrirComunidad(true)}>Activar Comunidad gratis</button> : (
+          <form onSubmit={activarComunidad}>
+            <div className="campo"><label>¿Qué emergencia o campaña es? (dos frases)</label><textarea rows={3} required value={motivo} onChange={e => setMotivo(e.target.value)} placeholder="Ej: Centro de acopio por las inundaciones de Chillán, organizado por la junta de vecinos de..." /></div>
+            <div className="campo"><label>Enlace público (noticia, redes, sitio) — opcional</label><input value={enlace} onChange={e => setEnlace(e.target.value)} placeholder="https://" /></div>
+            {err && <div className="error">{err}</div>}
+            <button className="accent">Activar 90 días gratis</button>
+          </form>
+        )}
+      </div>
+      <p className="small muted">El pago es en línea con tarjeta y el plan se activa solo, en segundos, con el correo de tu cuenta ({session?.user.email}). Soporte: {SOPORTE_EMAIL} o Lía dentro de la app.</p>
     </div>
   )
 }

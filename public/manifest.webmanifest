@@ -1,7 +1,7 @@
 {
-  "name": "Acopia — centro de acopio",
-  "short_name": "Acopia",
-  "description": "Cajas, pallets y envíos de tu centro de acopio bajo control.",
+  "name": "Acopiar — control de bodega",
+  "short_name": "Acopiar",
+  "description": "Cajas con QR, pallets validados y despachos con packing list.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -4,12 +4,12 @@ import * as db from '../lib/db'
 import { mensajeError } from '../lib/supabase'
 
 const PAISES = ['Chile', 'Venezuela', 'Colombia', 'Perú', 'México', 'Argentina', 'Ecuador', 'Bolivia', 'Guatemala', 'Honduras', 'El Salvador', 'Nicaragua', 'Costa Rica', 'Panamá', 'República Dominicana', 'Cuba', 'Uruguay', 'Paraguay', 'España', 'Estados Unidos', 'Otro']
-const TIPOS = [['fundacion', 'Fundación / ONG'], ['iglesia', 'Iglesia / comunidad religiosa'], ['diaspora', 'Red de diáspora o voluntarios'], ['universidad', 'Universidad / colegio'], ['municipio', 'Municipio / gobierno'], ['empresa', 'Empresa'], ['otro', 'Otro']]
+const TIPOS = [['ecommerce', 'Ecommerce / tienda online'], ['distribuidor', 'Distribuidor / mayorista'], ['courier', 'Courier / logística'], ['importador', 'Importador / exportador'], ['acopio', 'Centro de acopio (agro, reciclaje, textil)'], ['fabricante', 'Fabricante / taller'], ['emergencia', 'Centro de acopio de emergencia / campaña solidaria'], ['otro', 'Otro']]
 
 export function Onboarding() {
   const { recargar, salir, session } = useStore()
   const [modo, setModo] = useState<'crear' | 'unirme'>('crear')
-  const [f, setF] = useState({ nombre: '', pais: 'Chile', tipo: 'fundacion', centro: 'Bodega principal', prefijo: 'BP', miNombre: '' })
+  const [f, setF] = useState({ nombre: '', pais: 'Chile', tipo: 'ecommerce', centro: 'Bodega principal', prefijo: 'BP', miNombre: '' })
   const [codigo, setCodigo] = useState('')
   const [err, setErr] = useState<string | null>(null)
   const [cargando, setCargando] = useState(false)
@@ -27,18 +27,18 @@ export function Onboarding() {
 
   return (
     <div className="centrado"><div className="auth">
-      <div className="logo">Acopia</div>
+      <div className="logo">Acopiar</div>
       <p className="muted" style={{ textAlign: 'center' }}>Hola {session?.user.email}. Último paso antes de empezar.</p>
       <div className="card">
         <div className="tabs">
-          <button type="button" className={modo === 'crear' ? 'activo' : ''} onClick={() => setModo('crear')}>Crear mi centro</button>
+          <button type="button" className={modo === 'crear' ? 'activo' : ''} onClick={() => setModo('crear')}>Crear mi bodega</button>
           <button type="button" className={modo === 'unirme' ? 'activo' : ''} onClick={() => setModo('unirme')}>Tengo un código</button>
         </div>
         <form onSubmit={crear}>
           <div className="campo"><label>Tu nombre (aparece en las cajas que registres)</label><input required value={f.miNombre} onChange={e => set('miNombre', e.target.value)} placeholder="Ej: María Pérez" /></div>
           {modo === 'crear' ? (
             <>
-              <div className="campo"><label>Nombre de la organización o campaña</label><input required value={f.nombre} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Fundación Manos Unidas" /></div>
+              <div className="campo"><label>Nombre de tu negocio u organización</label><input required value={f.nombre} onChange={e => set('nombre', e.target.value)} placeholder="Ej: Tienda Ropa Linda SpA" /></div>
               <div className="campos-2">
                 <div className="campo"><label>País</label><select value={f.pais} onChange={e => set('pais', e.target.value)}>{PAISES.map(p => <option key={p}>{p}</option>)}</select></div>
                 <div className="campo"><label>Tipo</label><select value={f.tipo} onChange={e => set('tipo', e.target.value)}>{TIPOS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select></div>

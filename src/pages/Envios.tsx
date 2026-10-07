@@ -26,13 +26,13 @@ export function Envios() {
     e.preventDefault(); if (!org) return
     if (planVigente(org) === 'gratis' && oferta.gratis_max_envios != null && lista.length >= oferta.gratis_max_envios) { mostrar(`El plan gratis incluye ${oferta.gratis_max_envios} envío. Activa Campaña para más.`, 'err'); return }
     const n = lista.length + 1
-    try { await db.crearEnvio({ org_id: org.id, codigo: `ENV-${String(n).padStart(3, '0')}`, nombre: f.nombre, destino: f.destino, fecha: f.fecha }); setNuevo(false); setF({ nombre: '', destino: '', fecha: new Date().toISOString().slice(0, 10) }); await cargar() } catch (e) { mostrar(mensajeError(e), 'err') }
+    try { await db.crearEnvio({ org_id: org.id, codigo: `DSP-${String(n).padStart(3, '0')}`, nombre: f.nombre, destino: f.destino, fecha: f.fecha }); setNuevo(false); setF({ nombre: '', destino: '', fecha: new Date().toISOString().slice(0, 10) }); await cargar() } catch (e) { mostrar(mensajeError(e), 'err') }
   }
 
   return (
     <div className="stack">
-      <div className="row between"><h1>Envíos</h1>{rol === 'admin' && <button onClick={() => setNuevo(x => !x)}>+ Nuevo envío</button>}</div>
-      <p className="muted small">Un envío agrupa pallets cerrados (contenedor, camión o vuelo). Desde aquí sacas el packing list completo para aduana.</p>
+      <div className="row between"><h1>Despachos</h1>{rol === 'admin' && <button onClick={() => setNuevo(x => !x)}>+ Nuevo despacho</button>}</div>
+      <p className="muted small">Un despacho agrupa pallets cerrados (camión, contenedor o courier). Desde aquí sacas el packing list y los documentos.</p>
       {nuevo && (
         <form className="card" onSubmit={crear}>
           <div className="campo"><label>Nombre</label><input required value={f.nombre} onChange={e => setF(x => ({ ...x, nombre: e.target.value }))} placeholder="Contenedor 1 — Caracas" /></div>
@@ -40,10 +40,10 @@ export function Envios() {
             <div className="campo"><label>Destino</label><input value={f.destino} onChange={e => setF(x => ({ ...x, destino: e.target.value }))} placeholder="La Guaira, Venezuela" /></div>
             <div className="campo"><label>Fecha</label><input type="date" value={f.fecha} onChange={e => setF(x => ({ ...x, fecha: e.target.value }))} /></div>
           </div>
-          <button>Crear envío</button>
+          <button>Crear despacho</button>
         </form>
       )}
-      {lista.length === 0 ? <Vacio ico="🚚" titulo="Sin envíos" texto="Cuando tengas pallets cerrados, crea un envío y asígnalos." /> : (
+      {lista.length === 0 ? <Vacio ico="🚚" titulo="Sin despachos" texto="Cuando tengas pallets cerrados, crea un despacho y asígnalos." /> : (
         <div className="lista">{lista.map(e => (
           <a key={e.id} href={`#/envios/${e.id}`} className="item">
             <div className="grow"><div className="cod">{e.codigo}</div><div className="sub">{e.nombre} · {e.destino || 'sin destino'} · {fecha(e.fecha)}</div></div>
@@ -106,7 +106,7 @@ export function EnvioDetalle({ id }: { id: string }) {
   return (
     <div className="stack">
       <div className="row between">
-        <div><a href="#/envios" className="small">← Envíos</a><h1>{e.codigo} · {e.nombre}</h1><div className="muted small">{e.destino || 'sin destino'} · {fecha(e.fecha)}</div></div>
+        <div><a href="#/envios" className="small">← Despachos</a><h1>{e.codigo} · {e.nombre}</h1><div className="muted small">{e.destino || 'sin destino'} · {fecha(e.fecha)}</div></div>
         <span className={`chip ${abierto ? 'warn' : 'ok'}`}>{e.estado}</span>
       </div>
       {resumen && (
@@ -124,11 +124,11 @@ export function EnvioDetalle({ id }: { id: string }) {
           <button className="sec sm" onClick={() => conPlan(exportarResumen)}>⬇ Resumen por producto + HS</button>
           <button className="sec sm" onClick={() => conPlan(exportarPallets)}>⬇ Lista de pallets</button>
         </div>
-        {bloqueado && <div className="aviso">Registrar y paletizar es gratis sin límite. Para <b>cerrar el envío y descargar los documentos</b> activa Campaña (US$97 por 90 días) o Pro. <a href="#/plan">Ver planes</a></div>}
+        {bloqueado && <div className="aviso">Registrar y paletizar es gratis sin límite. Para <b>cerrar el despacho y descargar los documentos</b> activa un plan desde US$19 al mes. <a href="#/plan">Ver planes</a></div>}
         <p className="small muted" style={{ marginTop: '.5rem' }}>Los CSV abren en Excel o Google Sheets. El HS code sale del catálogo (por palabra clave o categoría); revísalo con tu agente de aduana.</p>
       </div>
       <div className="card">
-        <div className="row between"><h2>Pallets del envío</h2>{rol === 'admin' && (abierto ? <button className="sm" onClick={() => estado('cerrado')} disabled={asignados.length === 0}>Cerrar envío</button> : <button className="sm ghost" onClick={() => estado('abierto')}>Reabrir</button>)}</div>
+        <div className="row between"><h2>Pallets del despacho</h2>{rol === 'admin' && (abierto ? <button className="sm" onClick={() => estado('cerrado')} disabled={asignados.length === 0}>Cerrar despacho</button> : <button className="sm ghost" onClick={() => estado('abierto')}>Reabrir</button>)}</div>
         {asignados.length === 0 ? <p className="muted">Sin pallets asignados.</p> : (
           <div className="lista">{asignados.map(p => <div key={p.id} className="item"><a href={`#/pallets/${p.id}`} className="grow"><span className="cod">{p.codigo}</span></a>{abierto && <button className="ghost sm" onClick={() => quitar(p)}>Quitar</button>}</div>)}</div>
         )}
@@ -136,7 +136,7 @@ export function EnvioDetalle({ id }: { id: string }) {
       {abierto && (
         <div className="card">
           <h2>Pallets cerrados disponibles</h2>
-          {libres.length === 0 ? <p className="muted">No hay pallets cerrados sin envío.</p> : (
+          {libres.length === 0 ? <p className="muted">No hay pallets cerrados sin despacho.</p> : (
             <div className="lista">{libres.map(p => <div key={p.id} className="item"><div className="grow"><span className="cod">{p.codigo}</span><div className="sub">{p.operador_nombre}</div></div><button className="sm" onClick={() => asignar(p)}>Asignar</button></div>)}</div>
           )}
         </div>

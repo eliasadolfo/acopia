@@ -16,6 +16,8 @@ export const crearInvitacion = (org: string, rol: string) => ok<string>(supabase
 export const miembros = (org: string) => ok<Miembro[]>(supabase.from('ac_miembros').select('*').eq('org_id', org).order('created_at'))
 export const quitarMiembro = (org: string, user: string) => ok(supabase.from('ac_miembros').delete().eq('org_id', org).eq('user_id', user))
 export const actualizarOrg = (org: string, p: Partial<Org>) => ok(supabase.from('ac_orgs').update(p).eq('id', org))
+export const activarComunidad = (org: string, motivo: string, enlace: string) => ok<{ ok: boolean; vence: string }>(supabase.rpc('ac_activar_comunidad', { p_org: org, p_motivo: motivo, p_enlace: enlace }))
+export const miEstado = () => ok<Record<string, unknown>>(supabase.rpc('ac_mi_estado'))
 export const panel = (org: string) => ok<Panel>(supabase.rpc('ac_panel', { p_org: org }))
 
 // ---------- Centros ----------
