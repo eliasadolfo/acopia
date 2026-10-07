@@ -21,6 +21,7 @@ export function Pallets() {
   const [estado, setEstado] = useState('')
   const { toast, mostrar } = useToast()
   const [creando, setCreando] = useState(false)
+  const nuevoPedido = useRef(false)
 
   const cargar = useCallback(async () => { if (org) setLista(await db.pallets(org.id, { estado, centro: centroActual?.id })) }, [org, estado, centroActual])
   useEffect(() => { void cargar() }, [cargar])
@@ -30,7 +31,7 @@ export function Pallets() {
     setCreando(true)
     try { const r = await db.crearPallet(centroActual.id, miNombre); ir(`/pallets/${r.id}`) } catch (e) { mostrar(mensajeError(e), 'err') } finally { setCreando(false) }
   }, [centroActual, miNombre, creando, mostrar])
-  useEffect(() => { if (ruta.query.get('nuevo') === '1') { window.history.replaceState(null, '', '#/pallets'); void nuevo() } }, [ruta.query, nuevo])
+  useEffect(() => { if (ruta.query.get('nuevo') === '1' && !nuevoPedido.current) { nuevoPedido.current = true; window.history.replaceState(null, '', '#/pallets'); void nuevo() } }, [ruta.query, nuevo])
 
   return (
     <div className="stack">

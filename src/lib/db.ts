@@ -63,7 +63,11 @@ export const pallet = (id: string) => ok<Pallet>(supabase.from('ac_pallets').sel
 export const crearPallet = (centro: string, operador: string) => ok<{ id: string; codigo: string }[]>(supabase.rpc('ac_crear_pallet', { p_centro: centro, p_operador: operador })).then(r => r[0])
 export const actualizarPallet = (id: string, p: Partial<Pallet>) => ok(supabase.from('ac_pallets').update(p).eq('id', id))
 export const cajasDePallet = (palletId: string) => ok<Caja[]>(supabase.from('ac_cajas').select('*').eq('pallet_id', palletId).order('codigo'))
-export const paletizar = (palletId: string, codigo: string) => ok<{ ok: boolean; repetida?: boolean; caja: string; peso?: number; items?: number }>(supabase.rpc('ac_paletizar', { p_pallet: palletId, p_caja_codigo: codigo }))
+export const paletizar = async (palletId: string, codigo: string) => {
+  const r = await ok<{ ok: boolean; error?: string; repetida?: boolean; caja: string; peso?: number; items?: number }>(supabase.rpc('ac_paletizar', { p_pallet: palletId, p_caja_codigo: codigo }))
+  if (!r.ok) throw new Error(r.error ?? 'No se pudo agregar la caja')
+  return r
+}
 export const despaletizar = (cajaId: string) => ok(supabase.rpc('ac_despaletizar', { p_caja: cajaId }))
 
 // ---------- Envíos ----------

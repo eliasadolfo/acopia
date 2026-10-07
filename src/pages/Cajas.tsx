@@ -23,6 +23,7 @@ export function Cajas() {
   const [cargando, setCargando] = useState(true)
   const { toast, mostrar } = useToast()
   const [creando, setCreando] = useState(false)
+  const nuevaPedida = useRef(false)
 
   const cargar = useCallback(async () => {
     if (!org) return
@@ -40,7 +41,7 @@ export function Cajas() {
     } catch (e) { mostrar(mensajeError(e), 'err') } finally { setCreando(false) }
   }, [centroActual, miNombre, creando, mostrar])
 
-  useEffect(() => { if (ruta.query.get('nueva') === '1') { window.history.replaceState(null, '', '#/cajas'); void nueva() } }, [ruta.query, nueva])
+  useEffect(() => { if (ruta.query.get('nueva') === '1' && !nuevaPedida.current) { nuevaPedida.current = true; window.history.replaceState(null, '', '#/cajas'); void nueva() } }, [ruta.query, nueva])
 
   return (
     <div className="stack">
