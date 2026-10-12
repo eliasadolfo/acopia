@@ -48,7 +48,7 @@ export function Panel() {
             </div>
           )}
           <div className="card">
-            <h2>Por categoría</h2>
+            <div className="row between"><h2>Por categoría</h2><a href="#/stock" className="small">Ver stock por producto →</a></div>
             {p.por_categoria.length === 0 ? <p className="muted">Aún no hay ítems registrados. {miNombre ? `${miNombre.split(' ')[0]}, ` : ''}registra tu primera caja.</p> :
               <div className="stack">{p.por_categoria.map(c => (
                 <div key={c.categoria}><div className="row between small"><span>{c.categoria}</span><span className="muted">{fmt(c.items)} ítems · {fmt(c.lineas)} líneas</span></div><div className="barra"><div style={{ width: `${(100 * Number(c.items)) / maxCat}%` }} /></div></div>

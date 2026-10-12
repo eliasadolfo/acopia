@@ -17,6 +17,7 @@ export function Mas() {
   const [superadmin, setSuperadmin] = useState(false)
   useEffect(() => { supabase.rpc('ac_soy_superadmin').then(r => setSuperadmin(r.data === true)) }, [])
   const items = [
+    ['/stock', '📊', 'Stock por producto', 'Cuánto hay en bodega de cada producto'],
     ['/lia', '💬', 'Lía, tu asistente', 'Te guía paso a paso y responde dudas al instante'],
     ['/incidencias', '⚠️', 'Incidencias', 'Cajas inexistentes o duplicadas al paletizar'],
     ['/equipo', '👥', 'Equipo', 'Invitar voluntarios con un código'],

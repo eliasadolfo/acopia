@@ -38,7 +38,7 @@ export function Layout({ children }: { children: ReactNode }) {
         {plan !== 'gratis' ? <span className="chip ok">{PLANES[plan].nombre}</span> : <button className="sm accent" onClick={() => ir('/plan')}>Gratis</button>}
       </header>
       <nav className="nav" aria-label="Secciones">
-        {tabs.map(([k, l, i]) => <a key={k} href={`#/${k}`} className={seccion === k || (k === 'mas' && ['incidencias', 'equipo', 'plan', 'bodegas', 'ajustes', 'admin', 'lia'].includes(seccion)) ? 'activo' : ''}>{i}<span>{l}</span></a>)}
+        {tabs.map(([k, l, i]) => <a key={k} href={`#/${k}`} className={seccion === k || (k === 'mas' && ['incidencias', 'equipo', 'plan', 'bodegas', 'ajustes', 'admin', 'lia', 'stock'].includes(seccion)) ? 'activo' : ''}>{i}<span>{l}</span></a>)}
       </nav>
       <main className="main">{children}</main>
     </div>
