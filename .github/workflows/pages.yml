@@ -14,8 +14,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      VITE_SUPABASE_URL: https://dnrtibaxaereffchibco.supabase.co
-      VITE_SUPABASE_ANON_KEY: sb_publishable_MwUKZhqJzOkgQ2uy3goYRA_ysaXp_VY
+      VITE_SUPABASE_URL: https://wleqwxqqzckkazzbunxf.supabase.co
+      VITE_SUPABASE_ANON_KEY: sb_publishable_Lul8kIe1yNtvFGoH5auHZQ_782RcJn6
       VITE_WHATSAPP: "56930624514"
       VITE_CHECKOUT_CAMPANA: ${{ vars.CHECKOUT_CAMPANA }}
       VITE_CHECKOUT_PRO: ${{ vars.CHECKOUT_PRO }}
