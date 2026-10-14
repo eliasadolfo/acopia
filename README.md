@@ -1,4 +1,4 @@
-# Acopiar — control de bodega por cajas, pallets y despachos
+# Encajados — control de bodega por cajas, pallets y despachos
 
 Micro app SaaS para pymes que mueven productos (ecommerce, distribuidores, couriers, importadores, centros de acopio). Negocio personal de Elías, operado con cuentas de TEM. Nació de una operación real de 2.143 cajas, 83 pallets y 29 t en 65 días (Sheet "Inventario Voluntarios"); lo solidario va como Programa Comunidad (gratis 90 días).
 
@@ -9,11 +9,11 @@ Plan de negocio y campaña: `~/Documents/Empresas/Acopia/PLAN_NEGOCIO.md`.
 - **Frontend:** Vite + React 19 + TypeScript, sin router externo (hash `#/cajas/<id>`), QR con `qrcode`, lector de cámara con `BarcodeDetector` (fallback: escribir el código). PWA instalable (`public/manifest.webmanifest`).
 - **Backend:** Supabase (Auth + Postgres + RLS). Tablas `ac_*`, RPCs con correlativos atómicos (`ac_crear_caja`, `ac_crear_pallet`), validación al paletizar (`ac_paletizar` registra incidencias), panel (`ac_panel`), packing list con HS (`ac_packing_envio`), límites por plan (`ac_limites`).
 - **Automatización:** n8n (devn8n.tuescuelademarcas.cl), tag `ACOPIA`:
-  - `ACOPIAR — Lía cerebro (interno)` id `3ZT5FacW353VmNpI` → `POST /webhook/acopiar-lia-cerebro` (cabecera `x-acopia-token`): asistente/vendedora con Claude; memoria en `ac_chat` y `ac_chat_contactos` (RPC `ac_chat_leer` / `ac_chat_guardar`); avisa a Telegram si alguien pide un humano.
-  - `ACOPIAR — Lía en la app (webhook)` id `DCPOcnq9HkfaL21u` → `POST /webhook/acopiar-lia-app`: verifica la sesión Supabase del usuario, lee `ac_mi_estado` y llama al cerebro (guía paso a paso).
-  - `ACOPIAR — Lía por correo (web + respuestas)` id `zN7E1Y8l2xUv6i1c` → `POST /webhook/acopiar-lia-correo` (formulario de la landing) + Gmail Trigger (correos con asunto "Acopiar" en Gmail TEM): responde como "Lía de Acopiar" en el mismo hilo.
-  - `ACOPIAR — Pago Lemon Squeezy (webhook)` id `udKHofcyI2tN8IMT` → `POST /webhook/acopiar-pago`: verifica firma HMAC, activa plan por correo (`ac_activar_por_email`: emprendedor 31 días, bodega 31, temporada 90), avisa por Telegram.
-  - `ACOPIAR — Lead landing` id `R8oEtoPL8BSvscSd`: APAGADO (reemplazado por Lía).
+  - `ENCAJADOS — Lía cerebro (interno)` id `3ZT5FacW353VmNpI` → `POST /webhook/acopiar-lia-cerebro` (cabecera `x-acopia-token`): asistente/vendedora con Claude; memoria en `ac_chat` y `ac_chat_contactos` (RPC `ac_chat_leer` / `ac_chat_guardar`); avisa a Telegram si alguien pide un humano.
+  - `ENCAJADOS — Lía en la app (webhook)` id `DCPOcnq9HkfaL21u` → `POST /webhook/acopiar-lia-app`: verifica la sesión Supabase del usuario, lee `ac_mi_estado` y llama al cerebro (guía paso a paso).
+  - `ENCAJADOS — Lía por correo (web + respuestas)` id `zN7E1Y8l2xUv6i1c` → `POST /webhook/acopiar-lia-correo` (formulario de la landing) + Gmail Trigger (correos con asunto "Encajados" en Gmail TEM): responde como "Lía de Encajados" en el mismo hilo.
+  - `ENCAJADOS — Pago Lemon Squeezy (webhook)` id `udKHofcyI2tN8IMT` → `POST /webhook/acopiar-pago`: verifica firma HMAC, activa plan por correo (`ac_activar_por_email`: emprendedor 31 días, bodega 31, temporada 90), avisa por Telegram.
+  - `ENCAJADOS — Lead landing` id `R8oEtoPL8BSvscSd`: APAGADO (reemplazado por Lía).
 - **Admin interno:** en la app, Más → Administración (solo `ac_config.superadmin_email`): activar planes a mano, ver organizaciones y leads.
 
 ## Dónde vive cada cosa
@@ -21,7 +21,7 @@ Plan de negocio y campaña: `~/Documents/Empresas/Acopia/PLAN_NEGOCIO.md`.
 | Pieza | Ubicación |
 |---|---|
 | Código | `~/Desktop/Acopia` · GitHub `eliasadolfo/acopia` (privado) |
-| Base de datos | Supabase propio **acopiar** (`wleqwxqqzckkazzbunxf`, org Acopiar, São Paulo, plan gratis; migrado desde tem-redes el 13-oct-2026), tablas con prefijo `ac_`. Antes:  proyecto propio `acopia` cuando se libere cupo o se pase a Pro (ver abajo). |
+| Base de datos | Supabase propio **acopiar** (`wleqwxqqzckkazzbunxf`, org Encajados, São Paulo, plan gratis; migrado desde tem-redes el 13-oct-2026), tablas con prefijo `ac_`. Antes:  proyecto propio `acopia` cuando se libere cupo o se pase a Pro (ver abajo). |
 | Esquema | `supabase/migrations/001_esquema.sql` + migraciones 002–008 aplicadas por MCP el 7-oct-2026 (índices globales, activación/leads, superadmin, paletizar sin rollback, oferta sin barrera, Comunidad, planes de negocio + chat de Lía) |
 | Semilla global | `supabase/seed/002_seed_global.sql` (7.949 entradas de diccionario, 9 categorías, 89 HS) |
 | Secretos | `~/.config/edutrauma/secretos.env`: `ACOPIA_ACTIVACION_TOKEN`, `ACOPIA_LEMON_WEBHOOK_SECRET` |

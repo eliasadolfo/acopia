@@ -17,7 +17,7 @@ export function Lia() {
     if (!session) return
     supabase.rpc('ac_chat_leer', { p_clave: `app:${session.user.id}`, p_limite: 30 }).then(r => {
       const m = (r.data?.mensajes ?? []) as { rol: 'user' | 'assistant'; texto: string }[]
-      setMsgs(m.length ? m : [{ rol: 'assistant', texto: `Hola, soy Lía, la asistente de Acopiar. Puedo guiarte paso a paso para dejar tu bodega operando: crear bodegas, registrar la primera caja, armar un pallet o cerrar un despacho. ¿En qué estás ahora?` }])
+      setMsgs(m.length ? m : [{ rol: 'assistant', texto: `Hola, soy Lía, la asistente de Encajados. Puedo guiarte paso a paso para dejar tu bodega operando: crear bodegas, registrar la primera caja, armar un pallet o cerrar un despacho. ¿En qué estás ahora?` }])
     })
   }, [session])
   useEffect(() => { fin.current?.scrollIntoView({ behavior: 'smooth' }) }, [msgs, cargando])
@@ -38,7 +38,7 @@ export function Lia() {
   const sugerencias = ['¿Cómo registro mi primera caja?', '¿Cómo imprimo las etiquetas QR?', '¿Qué plan me conviene?', '¿Cómo saco el packing list?']
   return (
     <div className="stack">
-      <div><a href="#/mas" className="small">← Más</a><h1>Lía</h1><div className="muted small">Asistente de Acopiar · responde en segundos</div></div>
+      <div><a href="#/mas" className="small">← Más</a><h1>Lía</h1><div className="muted small">Asistente de Encajados · responde en segundos</div></div>
       <div className="card" style={{ minHeight: '50vh', display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
         {msgs.map((m, i) => (
           <div key={i} style={{ alignSelf: m.rol === 'user' ? 'flex-end' : 'flex-start', maxWidth: '85%', background: m.rol === 'user' ? 'var(--brand-soft)' : 'var(--surface-2)', borderRadius: 14, padding: '.6rem .85rem', whiteSpace: 'pre-wrap' }}>{m.texto}</div>

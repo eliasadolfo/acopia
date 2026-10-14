@@ -23,7 +23,7 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="app">
       <header className="topbar">
-        <a className="logo" href="#/panel">Acopiar</a>
+        <a className="logo" href="#/panel">Encajados</a>
         <div className="grow" />
         {orgs.length > 1 && (
           <select aria-label="Organización" value={org?.id ?? ''} onChange={e => elegirOrg(e.target.value)}>

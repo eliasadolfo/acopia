@@ -33,7 +33,7 @@ export function Login() {
   return (
     <div className="centrado">
       <div className="auth">
-        <div className="logo">Acopiar</div>
+        <div className="logo">Encajados</div>
         <p className="muted" style={{ textAlign: 'center' }}>Tu bodega bajo control: cajas con QR, pallets validados, despachos con packing list.</p>
         {!configurado && <div className="error">Falta configurar la conexión (variables VITE_SUPABASE_*).</div>}
         <div className="card">

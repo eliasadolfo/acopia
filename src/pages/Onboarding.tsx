@@ -27,7 +27,7 @@ export function Onboarding() {
 
   return (
     <div className="centrado"><div className="auth">
-      <div className="logo">Acopiar</div>
+      <div className="logo">Encajados</div>
       <p className="muted" style={{ textAlign: 'center' }}>Hola {session?.user.email}. Último paso antes de empezar.</p>
       <div className="card">
         <div className="tabs">

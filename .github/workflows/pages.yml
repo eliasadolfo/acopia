@@ -20,7 +20,7 @@ jobs:
       VITE_CHECKOUT_CAMPANA: ${{ vars.CHECKOUT_CAMPANA }}
       VITE_CHECKOUT_PRO: ${{ vars.CHECKOUT_PRO }}
       # Sin dominio propio la app vive en /acopia/; con acopia.app apuntando a Pages, cambiar a "/"
-      BASE: ${{ vars.BASE || '/acopia/' }}
+      BASE: ${{ vars.BASE || '/encajados/' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

@@ -261,7 +261,7 @@ end $$;
 -- Unirse con código de invitación
 create or replace function public.ac_unirse(p_codigo text, p_mi_nombre text)
 returns uuid language plpgsql security definer set search_path = public as $$
-declare v inv record;
+declare v record;
 begin
   if auth.uid() is null then raise exception 'No autenticado'; end if;
   select * into v from public.ac_invitaciones where codigo = upper(trim(p_codigo));

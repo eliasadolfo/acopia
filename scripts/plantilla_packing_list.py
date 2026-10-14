@@ -1,4 +1,4 @@
-# Genera landing/plantilla-packing-list-acopiar.xlsx (imán para importadores). Uso: .venv/bin/python scripts/plantilla_packing_list.py
+# Genera landing/plantilla-packing-list-encajados.xlsx (imán para importadores). Uso: .venv/bin/python scripts/plantilla_packing_list.py
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -6,7 +6,7 @@ wb = Workbook(); ws = wb.active; ws.title = 'Packing List'
 verde = PatternFill('solid', fgColor='0F766E'); gris = PatternFill('solid', fgColor='EEF2EE'); blanco = Font(color='FFFFFF', bold=True); b = Font(bold=True)
 fino = Side(style='thin', color='D9E0DB'); borde = Border(left=fino, right=fino, top=fino, bottom=fino)
 ws.merge_cells('A1:J1'); ws['A1'] = 'PACKING LIST / LISTA DE EMPAQUE'; ws['A1'].font = Font(size=16, bold=True, color='0F766E')
-ws.merge_cells('A2:J2'); ws['A2'] = 'Plantilla gratuita de Acopiar · acopiar.app · Completa el encabezado y una fila por producto dentro de cada caja o pallet.'; ws['A2'].font = Font(italic=True, color='5E6B66')
+ws.merge_cells('A2:J2'); ws['A2'] = 'Plantilla gratuita de Encajados · encajados.cl · Completa el encabezado y una fila por producto dentro de cada caja o pallet.'; ws['A2'].font = Font(italic=True, color='5E6B66')
 cab = [('Exportador / Vendedor', 'B4'), ('Consignatario / Comprador', 'B5'), ('N° de factura (Invoice)', 'B6'), ('Fecha', 'B7'), ('Lugar de carga', 'G4'), ('Lugar de destino', 'G5'), ('Modo (marítimo / aéreo / terrestre)', 'G6'), ('N° de contenedor / guía', 'G7')]
 for et, celda in cab:
     col = celda[0]; fila = int(celda[1:]); etcol = chr(ord(col) - 1)
@@ -29,8 +29,8 @@ ws['A63'].font = Font(italic=True, color='5E6B66'); ws.merge_cells('A63:J63')
 for i, w in enumerate([10, 10, 38, 11, 10, 20, 14, 14, 20, 16], 1): ws.column_dimensions[get_column_letter(i)].width = w
 ws.row_dimensions[9].height = 32; ws.freeze_panes = 'A10'
 ws2 = wb.create_sheet('Cómo usarla')
-textos = ['CÓMO USAR ESTA PLANTILLA', '', '1. Completa el encabezado: quién envía, quién recibe, número de factura, fecha, origen y destino.', '2. Una fila por producto. Si una caja trae varios productos, repite el número de caja en cada fila.', '3. Agrupa las cajas por pallet (columna Pallet). Si despachas sin pallets, deja la columna vacía.', '4. Código HS: es el código arancelario. Si no lo sabes, pregúntale a tu agente de aduana o busca "clasificación arancelaria + producto".', '5. Pesos: neto = solo el producto; bruto = producto + caja + embalaje. Aduana y transportista usan el bruto.', '6. Los totales se calculan solos en la fila 61.', '', '¿Cansado de armar esto a mano para cada despacho?', 'Acopiar lo genera solo: registras cada caja con su QR desde el celular, armas el pallet escaneando y el packing list sale listo al cerrar el despacho. Gratis para empezar: https://acopiar.app']
+textos = ['CÓMO USAR ESTA PLANTILLA', '', '1. Completa el encabezado: quién envía, quién recibe, número de factura, fecha, origen y destino.', '2. Una fila por producto. Si una caja trae varios productos, repite el número de caja en cada fila.', '3. Agrupa las cajas por pallet (columna Pallet). Si despachas sin pallets, deja la columna vacía.', '4. Código HS: es el código arancelario. Si no lo sabes, pregúntale a tu agente de aduana o busca "clasificación arancelaria + producto".', '5. Pesos: neto = solo el producto; bruto = producto + caja + embalaje. Aduana y transportista usan el bruto.', '6. Los totales se calculan solos en la fila 61.', '', '¿Cansado de armar esto a mano para cada despacho?', 'Encajados lo genera solo: registras cada caja con su QR desde el celular, armas el pallet escaneando y el packing list sale listo al cerrar el despacho. Gratis para empezar: https://encajados.cl']
 for r, t in enumerate(textos, 1):
     ws2.cell(row=r, column=1, value=t).font = Font(bold=(r in (1, 10)), size=14 if r == 1 else 11)
 ws2.column_dimensions['A'].width = 120
-wb.save('landing/plantilla-packing-list-acopiar.xlsx'); print('plantilla ok')
+wb.save('landing/plantilla-packing-list-encajados.xlsx'); print('plantilla ok')
