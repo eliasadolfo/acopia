@@ -20,7 +20,7 @@ Plan de negocio y campaña: `~/Documents/Empresas/Acopia/PLAN_NEGOCIO.md`.
 
 | Pieza | Ubicación |
 |---|---|
-| Código | `~/Desktop/Acopia` · GitHub `eliasadolfo/acopia` (privado) |
+| Código | `~/Desktop/Encajados` · GitHub `eliasadolfo/acopia` (privado) |
 | Base de datos | Supabase propio **acopiar** (`wleqwxqqzckkazzbunxf`, org Encajados, São Paulo, plan gratis; migrado desde tem-redes el 13-oct-2026), tablas con prefijo `ac_`. Antes:  proyecto propio `acopia` cuando se libere cupo o se pase a Pro (ver abajo). |
 | Esquema | `supabase/migrations/001_esquema.sql` + migraciones 002–008 aplicadas por MCP el 7-oct-2026 (índices globales, activación/leads, superadmin, paletizar sin rollback, oferta sin barrera, Comunidad, planes de negocio + chat de Lía) |
 | Semilla global | `supabase/seed/002_seed_global.sql` (7.949 entradas de diccionario, 9 categorías, 89 HS) |
